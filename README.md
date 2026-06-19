@@ -4,8 +4,9 @@
 
   [![Version](https://img.shields.io/badge/version-2.1%20(Research%20PoC)-58a6ff.svg)](./prototype_sods.py)
   [![Theory](https://img.shields.io/badge/theory-Rice's%20Theorem%20Workaround-a371f7.svg)](./WHITEPAPER.md)
+  [![Genesis](https://img.shields.io/badge/genesis-Cemw%20Anyway%20Inspiration-ffbd2e.svg)](./GENESIS.md)
   [![Speedup](https://img.shields.io/badge/speedup-4.5×%20to%207.14×%20(Simulated)-56d364.svg)](./prototype_sods.py)
-  [![Vibe](https://img.shields.io/badge/vibe-Doom%20(1993)%20-Apple%20Task%20Manager%20Efficiency-f0883e.svg)](./WHITEPAPER.md)
+  [![Vibe](https://img.shields.io/badge/vibe-Doom%20(1993)%20-Apple%20Task%20Manager%20Efficiency-f0883e.svg)](./GENESIS.md)
 </div>
 
 ---
@@ -53,7 +54,8 @@ Jutaan laptop lama dan perangkat ponsel dibuang ke tempat sampah setiap tahun me
 
 Repositori ini menyajikan **Desain Penelitian Hibrida (*Design Science Research* & Studi Literatur Kualitatif)** yang dikemas ke dalam pilar modular siap pakai:
 
-### 1. 📜 [Whitepaper Teknis & Catatan Riset (`WHITEPAPER.md`)](./WHITEPAPER.md)
+### 1. 📜 [Whitepaper Teknis, Catatan Riset & Transkrip Genesis (`WHITEPAPER.md`)](./WHITEPAPER.md)
+* **[Inspirasi Awal (`GENESIS.md`):](./GENESIS.md)** Mengabadikan transkrip esai YouTube **Cemw Anyway** (*Ketika Performance Bukan Prioritas Lagi*) yang menjadi pemantik lahirnya arsitektur ini.
 * Naskah riset mendalam yang diformat khusus untuk ekosistem *Open-Source* dengan strata bukti transparan (**T1 Primer Kanonik** hingga **T4 Anekdot Forum**).
 * **Audit Kesenjangan Realitas Roadmap:** Memisahkan secara tegas antara implementasi PoC Python saat ini berbanding peta jalan rekayasa kernel OS sejati.
 * **Bab 5.6 Terdepan:** Mengurai peta mitigasi 5 rintangan produksi melalui *Selective Taint Analysis (Mozilla `rr`)*, intersepsi kernel tanpa modifikasi (*eBPF* + *DynamoRIO*), *Hardware PMU Statistical Sampling (&lt;1% overhead)*, dan *Timing Noise Randomization*.

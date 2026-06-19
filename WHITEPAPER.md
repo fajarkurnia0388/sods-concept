@@ -65,7 +65,9 @@ Karya tulis ini secara transparan dan jujur mengaudit **kesenjangan realitas (*r
 
 ## BAB I — PENDAHULUAN
 
-### 1.1 Latar Belakang dan Urgensi Sosio-Ekonomi
+### 1.1 Latar Belakang, Urgensi Sosio-Ekonomi, dan Transkrip Genesis
+Proyek penelitian dan rancang bangun arsitektur ini terlahir secara mendadak terinspirasi oleh esai fenomenal dari kanal YouTube **Cemw Anyway** berjudul [Ketika Performance Bukan Prioritas Lagi](https://www.youtube.com/watch?v=7zZSxjh72yk) (transkrip lengkap diabadikan pada berkas [GENESIS.md](./GENESIS.md)).
+
 Pada era 1970-an hingga awal 1990-an, keterbatasan fisik silikon dan memori memaksa pengembang perangkat lunak melakukan rekayasa komputasi dengan tingkat efisiensi yang ekstrem. Setiap *byte* bernilai tinggi; kendali eksekusi berada di atas instruksi bahasa *Assembly* dan C; dan inovasi algoritma seperti *Binary Space Partitioning* (BSP) yang diterapkan oleh John Carmack pada *Doom* (id Software, 1993) memungkinkan *rendering* dunia 3D interaktif berjalan mulus di bawah keterbatasan RAM 4 MB dan prosesor 486. Bukti sejarah lain yang tak kalah melegenda adalah *Task Manager* Windows orisinal buatan Dave Plummer (1995) yang hanya membutuhkan RAM sekitar 80 KB dengan arsitektur memori yang dirancang agar tetap dapat dipanggil bahkan ketika sistem operasi mengalami *deadlock* kehabisan sumber daya.
 
 Memasuki dekade 2020-an hingga tahun 2026 saat ini, lanskap rekayasa perangkat lunak mengalami pergeseran filosofis yang radikal. Hukum Moore yang berpuluh tahun memberikan peningkatan performa perangkat keras dan penurunan harga silikon secara eksponensial, memicu terwujudnya **Paradoks Jevons** dalam ranah perangkat lunak: *ketersediaan sumber daya komputasi yang melimpah dan murah justru membuat pengembang bersikap semakin boros, bukan semakin hemat*. Hal ini berujung pada manifestasi **Hukum Wirth** (*Wirth's Law*): perangkat lunak melambat dan membengkak jauh lebih cepat daripada kecepatan peningkatan perangkat keras.
