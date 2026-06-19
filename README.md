@@ -3,10 +3,17 @@
   <p><b>A Production-Critical Conceptual Architecture & Runtime Wrapper to Overcome Software Bloat</b></p>
 
   [![Version](https://img.shields.io/badge/version-2.1%20(Production%20Critical)-58a6ff.svg)](./prototype_sods.py)
-  [![Theory](https://img.shields.io/badge/theory-Rice's%20Theorem%20Workaround-a371f7.svg)](./karya_tulis_ilmiah.md)
+  [![Theory](https://img.shields.io/badge/theory-Rice's%20Theorem%20Workaround-a371f7.svg)](./WHITEPAPER.md)
   [![Speedup](https://img.shields.io/badge/speedup-4.5×%20to%207.14×-56d364.svg)](./prototype_sods.py)
-  [![Vibe](https://img.shields.io/badge/vibe-Doom%20(1993)%20Efficiency-f0883e.svg)](./karya_tulis_ilmiah.md)
+  [![Vibe](https://img.shields.io/badge/vibe-Doom%20(1993)%20Efficiency-f0883e.svg)](./WHITEPAPER.md)
 </div>
+
+---
+
+> **🚀 Penulis & Atribusi Kolaborasi Riset**  
+> * **Gagasan Konseptual Orisinal & Rancang Bangun SODS:** Fajar Kurnia ([@fajarkurnia0388](https://github.com/fajarkurnia0388))  
+> * **Asisten Elaborasi Teori & Instrumentasi Agentik:** Arena.ai (Agent Mode)  
+> * **Tanggal Rilis:** 19 Juni 2026
 
 ---
 
@@ -24,8 +31,8 @@ Proyek ini merealisasikan filosofi kompilator JIT modern (*V8*, *PyPy*, *GraalVM
 
 Repositori ini menyajikan **Desain Penelitian Hibrida (*Design Science Research* & Studi Literatur Kualitatif)** yang dikemas ke dalam 3 berkas utama:
 
-### 1. 📜 [Naskah Ilmiah & Studi Literatur (`karya_tulis_ilmiah.md`)](./karya_tulis_ilmiah.md)
-* Naskah riset mendalam dengan metodologi stratifikasi bukti transparan (**T1 Primer Kanonik** hingga **T4 Anekdot Forum**).
+### 1. 📜 [Whitepaper Teknis & Catatan Riset (`WHITEPAPER.md`)](./WHITEPAPER.md)
+* Naskah riset mendalam yang diformat khusus untuk ekosistem *Open-Source* dengan strata bukti transparan (**T1 Primer Kanonik** hingga **T4 Anekdot Forum**).
 * Membedah Wirth's Law, Paradoks Jevons, kritik *Clean Code* (Casey Muratori), dan audit Teorema Rice.
 * Menyajikan **Kerangka Solusi Berlapis (Lapis 0–4)** yang diurutkan berdasarkan rasio *effort-to-impact* disertai metrik riil korporasi (Figma 3× lebih cepat, Slack −80% RAM, Tauri −97% ukuran).
 * **Bab 5.6 Terdepan:** Mengurai peta mitigasi 5 rintangan produksi melalui *Selective Taint Analysis (Mozilla `rr`)*, intersepsi kernel tanpa modifikasi (*eBPF* + *DynamoRIO*), *Hardware PMU Statistical Sampling (&lt;1% overhead)*, dan *Timing Noise Randomization*.
@@ -50,8 +57,8 @@ Anda dapat mengeksekusi dan mengaudit prototipe secara langsung di terminal Anda
 
 ```bash
 # Clone repositori
-git clone https://github.com/USERNAME/sods.git
-cd sods
+git clone https://github.com/fajarkurnia0388/sods-concept.git
+cd sods-concept
 
 # Eksekusi prototipe audit v2.1
 python3 prototype_sods.py
@@ -79,7 +86,7 @@ python3 prototype_sods.py
 ## 🛠️ Peta Jalan Pengerjaan Menuju Tingkat Produksi
 
 * **Fase 1 (WASM Target):** Intersepsi dan eksekusi isolasi pada format WebAssembly (`.wasm`) memanfaatkan *Wasmer Core / Wasmtime SDK*. Waktu startup ditargetkan &lt; 200 ms.
-* **Fase 2 (LLVM/Cranelift Emisi):** Pembangkitan *Machine Code* Assembly x86_64 dan ARM64 native yang disisipi *Guards* tingkat register.
+* **Fase 2 (LLVM/Cranelift Emisi):** Pembangkitan *Machine Code* Assembly x86_64 and ARM64 native yang disisipi *Guards* tingkat register.
 * **Fase 3 (Wasmtime Fuel Isolasi boundaries):** Penegakan jaminan *memory safety* deterministik dan pembatasan konsumsi CPU/RAM.
 * **Fase 4 (Tauri CLI Drop-in Wrapper):** Perkakas pembungkus otomatis (`sods-wrapper`) untuk memangkas pemakaian RAM aplikasi Electron siap pakai hingga ~80%.
 
