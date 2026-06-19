@@ -25,7 +25,7 @@ class EquivalenceVerifier:
                 print(f"  [VERIFY MISMATCH] Input {args}: generic={r_generic} ≠ spec={r_special}")
 
         if mismatches == 0:
-            print(f"[EQUIVALENCE VERIFIER] '{fn_name}': PASSED — Empirical Equivalence Verified ✓")
+            print(f"[EQUIVALENCE VERIFIER] '{fn_name}': PASSED — Empirical Equivalence Verified [OK]")
         else:
             print(f"[EQUIVALENCE VERIFIER] '{fn_name}': FAILED — {mismatches} anomaly detected! "
                   f"Discarding specialized fast path.")

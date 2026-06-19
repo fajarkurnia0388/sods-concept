@@ -50,16 +50,16 @@ def run_benchmarks():
     native_add_fn = operator.add
 
     print("=" * 72)
-    print(" 🧪 SODS INDUSTRIAL SCIENTIFIC BENCHMARKING SUITE".center(72))
-    print(" Executing an Exceptionally Fair Comparison on Bounded Numerics".center(72))
+    print(" 🧪 SUITE BENCHMARK ILMIAH INDUSTRI SODS".center(72))
+    print(" Mengeksekusi Perbandingan yang Sangat Adil pada Numerik Terbatas".center(72))
     print("=" * 72)
     
-    print(f"\n [System Attestation Metadata]")
-    print(f"  • Python Runtime : {platform.python_implementation()} {platform.python_version()} ({platform.python_compiler()})")
+    print(f"\n [Metadata Atestasi Sistem]")
+    print(f"  • Runtime Python : {platform.python_implementation()} {platform.python_version()} ({platform.python_compiler()})")
     print(f"  • Platform OS    : {platform.system()} {platform.release()} ({platform.machine()})")
-    print(f"  • Processor Node : {platform.processor() or 'Standard Architecture'}")
-    print(f"  • Workload Setup : {N:,} Array Dispatch Operations per Run")
-    print(f"  • Sampling Runs  : {runs} Full Precision Execution Rounds\n")
+    print(f"  • Node Prosesor  : {platform.processor() or 'Arsitektur Standar'}")
+    print(f"  • Setup Beban    : {N:,} Operasi Dispatch Array per Putaran")
+    print(f"  • Ronde Sampling : {runs} Ronde Eksekusi Presisi Penuh\n")
 
     def benchmark_candidate(runner_fn, prefix=""):
         execution_times = []
@@ -68,22 +68,22 @@ def run_benchmarks():
             runner_fn()
             elapsed_ms = (time.perf_counter() - t0) * 1000
             execution_times.append(elapsed_ms)
-            print(f"    {prefix} Round #{r}: {elapsed_ms:>6.2f} ms")
+            print(f"    {prefix} Ronde #{r}: {elapsed_ms:>6.2f} ms")
         return execution_times
 
     # ═════════════════════════════════════════════════════════════════════════
     # SKENARIO A: WORKLOAD STABIL / MONOMORFIK
     # ═════════════════════════════════════════════════════════════════════════
     print(" ── SKENARIO A: WORKLOAD STABIL (Integer Murni) ───────────────────────────")
-    print(f" [Candidate 1] SODS Fast Path ({label_stable})")
+    print(f" [Kandidat 1] SODS Fast Path ({label_stable})")
     spec_stable_times = benchmark_candidate(lambda: [specialized_stable_fn(a, b) for a, b in workloads_stable], "Spec-Stable")
     spec_stable_median = statistics.median(spec_stable_times)
 
-    print(f"\n [Candidate 2] Bloated Generic Target (`generic_add`)")
+    print(f"\n [Kandidat 2] Target Generik Lambat (`generic_add`)")
     gen_stable_times = benchmark_candidate(lambda: [generic_add(a, b) for a, b in workloads_stable], "Gen-Stable ")
     gen_stable_median = statistics.median(gen_stable_times)
 
-    print(f"\n [Candidate 3] Python Native Baseline (`operator.add`)")
+    print(f"\n [Kandidat 3] Acuan Native Python (`operator.add`)")
     native_stable_times = benchmark_candidate(lambda: [native_add_fn(a, b) for a, b in workloads_stable], "Native     ")
     native_stable_median = statistics.median(native_stable_times)
 
@@ -97,11 +97,11 @@ def run_benchmarks():
     print("   (Mensimulasikan masukan dunia nyata di mana tipe data terus berganti.")
     print("    Membuktikan bahwa PIC terbebani overhead Guard Inspection saat Guard gagal).")
     
-    print(f"\n [Candidate 1] SODS Fast Path (Sering mengalami Guard Fails & Fallback)")
+    print(f"\n [Kandidat 1] SODS Fast Path (Sering mengalami Kegagalan Guard & Fallback)")
     spec_vol_times = benchmark_candidate(lambda: [specialized_volatile_fn(a, b) for a, b in workloads_volatile], "Spec-Volatile")
     spec_vol_median = statistics.median(spec_vol_times)
 
-    print(f"\n [Candidate 2] Bloated Generic Target Target (Berjalan murni di Lookup Table)")
+    print(f"\n [Kandidat 2] Target Generik Lambat (Berjalan murni di Tabel Lookup)")
     gen_vol_times = benchmark_candidate(lambda: [generic_add(a, b) for a, b in workloads_volatile], "Gen-Volatile ")
     gen_vol_median = statistics.median(gen_vol_times)
 
@@ -109,18 +109,18 @@ def run_benchmarks():
 
     # ── Scientific Attestation Report ────────────────────────────────────────
     print("\n" + "═" * 72)
-    print(" 📊 FINAL EMPIRICAL SCIENTIFIC BENCHMARKING REPORT".center(72))
+    print(" 📊 LAPORAN BENCHMARK ILMIAH EMPIRIS FINAL".center(72))
     print("═" * 72)
     print(f"""
   ┌──────────────────────────────┬──────────┬──────────┬──────────────────────┐
-  │ Skenario & Strategy          │ Median   │ Mean     │ Komparasi Empiris    │
+  │ Skenario & Strategi          │ Median   │ Rata-rata│ Komparasi Empiris    │
   ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤
-  │ A: SODS Fast Path (Stabil)   │ {spec_stable_median:>5.2f} ms │ {statistics.mean(spec_stable_times):>5.2f} ms │ ★ {speedup_stable_gen:.2f}× faster       │
-  │ A: Bloated Generic Target   │ {gen_stable_median:>5.2f} ms │ {statistics.mean(gen_stable_times):>5.2f} ms │ Baseline stabil      │
-  │ A: Python Native Baseline     │ {native_stable_median:>5.2f} ms │ {statistics.mean(native_stable_times):>5.2f} ms │ {speedup_stable_native:.2f}× dari kinerja native │
+  │ A: SODS Fast Path (Stabil)   │ {spec_stable_median:>5.2f} ms │ {statistics.mean(spec_stable_times):>5.2f} ms │ ★ {speedup_stable_gen:.2f}× lebih cepat   │
+  │ A: Target Generik Lambat     │ {gen_stable_median:>5.2f} ms │ {statistics.mean(gen_stable_times):>5.2f} ms │ Acuan stabil         │
+  │ A: Acuan Native Python       │ {native_stable_median:>5.2f} ms │ {statistics.mean(native_stable_times):>5.2f} ms │ {speedup_stable_native:.2f}× dari kinerja native │
   ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤
   │ B: SODS Fast Path (Volatile) │ {spec_vol_median:>5.2f} ms │ {statistics.mean(spec_vol_times):>5.2f} ms │ {speedup_vol_gen:.2f}× (Terbebani Guard)│
-  │ B: Bloated Generic Target   │ {gen_vol_median:>5.2f} ms │ {statistics.mean(gen_vol_times):>5.2f} ms │ Baseline volatile    │
+  │ B: Target Generik Lambat     │ {gen_vol_median:>5.2f} ms │ {statistics.mean(gen_vol_times):>5.2f} ms │ Acuan volatile       │
   └──────────────────────────────┴──────────┴──────────┴──────────────────────┘
 
   • Hasil Skenario A (Stabil)   : PIC memotong overhead secara optimal (★ {speedup_stable_gen:.2f}× Lebih Cepat).

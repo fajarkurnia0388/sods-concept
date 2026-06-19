@@ -24,9 +24,9 @@ def run_demo():
     sandbox = SODSSandbox(reset_cache=True)
     N = 10_000
 
-    # ── STAGE 1: COLD RUN ────────────────────────────────────────────────────
+    # ── TAHAP 1: COLD RUN ────────────────────────────────────────────────────
     print("\n" + "═" * 72)
-    print("  STAGE 1: COLD RUN — Instrumentasi & Pembangunan Profil PIC".center(72))
+    print("  TAHAP 1: COLD RUN — Instrumentasi & Pembangunan Profil PIC".center(72))
     print("═" * 72)
     
     cold_workloads = (
@@ -37,9 +37,9 @@ def run_demo():
     sandbox.cold_run("generic_add", generic_add, cold_workloads)
     sandbox.save_cookie()
 
-    # ── STAGE 2: EQUIVALENCE VERIFIER ────────────────────────────────────────
+    # ── TAHAP 2: EQUIVALENCE VERIFIER ────────────────────────────────────────
     print("\n" + "═" * 72)
-    print("  STAGE 2: EQUIVALENCE VERIFIER — Mengakali Batas Teorema Rice".center(72))
+    print("  TAHAP 2: EQUIVALENCE VERIFIER — Mengakali Batas Teorema Rice".center(72))
     print("═" * 72)
     
     sfn, _, _ = sandbox.specialized["generic_add"]
@@ -50,9 +50,9 @@ def run_demo():
         print("  HALT: Spesialisasi tidak aman. Prototipe berhenti.")
         return
 
-    # ── STAGE 3: WARM RUN BENCHMARK ──────────────────────────────────────────
+    # ── TAHAP 3: WARM RUN BENCHMARK ──────────────────────────────────────────
     print("\n" + "═" * 72)
-    print("  STAGE 3: WARM RUN — Bekerja dengan Spesialisasi JIT".center(72))
+    print("  TAHAP 3: WARM RUN — Bekerja dengan Spesialisasi JIT".center(72))
     print("═" * 72)
     
     sandbox2 = SODSSandbox()
@@ -61,17 +61,17 @@ def run_demo():
     results, _ = sandbox2.warm_run("generic_add", generic_add, [(10, 20), (5.5, 4.5), (10, 5.0)])
     print(f"  Contoh Eksekusi Cepat : {(10, 20)} + {(5.5, 4.5)} + {(10, 5.0)} -> {results} ✓")
 
-    # ── STAGE 4: WASI I/O BOUNDARY TAINT CHECK ──────────────────────────────
+    # ── TAHAP 4: WASI I/O BOUNDARY TAINT CHECK ──────────────────────────────
     print("\n" + "═" * 72)
-    print("  STAGE 4: UJI PERBATASAN I/O — WASI Taint Analysis".center(72))
+    print("  TAHAP 4: UJI PERBATASAN I/O — WASI Taint Analysis".center(72))
     print("═" * 72)
     
     io_workloads = [("Log sesi login pengguna A",), ("Log sinkronisasi database",)]
     sandbox2.cold_run("generic_log_io", generic_log_io, io_workloads, is_io_side_effect=True)
 
-    # ── STAGE 5: OSR DEOPT FALLBACK ──────────────────────────────────────────
+    # ── TAHAP 5: OSR DEOPT FALLBACK ──────────────────────────────────────────
     print("\n" + "═" * 72)
-    print("  STAGE 5: UJI OSR DEOPT — Masukan Tipe Campuran Tak Teramati".center(72))
+    print("  TAHAP 5: UJI OSR DEOPT — Masukan Tipe Campuran Tak Teramati".center(72))
     print("═" * 72)
     print("  Menyisipkan tipe String di tengah aliran komputasi numerik.")
     
@@ -80,9 +80,9 @@ def run_demo():
     print(f"  Hasil Komputasi : {mixed_results}")
     print(f"  Jumlah Deopt OSR: {mixed_deopt}x — Keluaran tetap 100% BENAR ✓")
 
-    # ── STAGE 6: TIER-LOWERING PROTECTION ON MEGAMORPHIC STORM ──────────────
+    # ── TAHAP 6: UJI MEGAMORPHIC VOLATILE — Tier-Lowering Protection ──────────
     print("\n" + "═" * 72)
-    print("  STAGE 6: UJI MEGAMORPHIC VOLATILE — Tier-Lowering Protection".center(72))
+    print("  TAHAP 6: UJI MEGAMORPHIC VOLATILE — Tier-Lowering Protection".center(72))
     print("═" * 72)
     print("  Membombardir sistem dengan tipe data acak berulang (Guard thrashing).")
     
