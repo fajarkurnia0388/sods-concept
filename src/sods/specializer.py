@@ -7,6 +7,7 @@ the Guard increments its internal deopt counter and evacuates execution (OSR) ba
 to the safe generic target.
 """
 
+import threading
 from typing import Tuple, Callable, Any, List
 
 class SpecializedFunction:
@@ -16,14 +17,16 @@ class SpecializedFunction:
         self.label = label
         self.supported_sigs = supported_sigs
         self.deopt_count = 0
+        self._deopt_lock = threading.Lock()  # Thread-safe increment guard
 
     def __call__(self, a: Any, b: Any) -> Any:
         # ── GUARD INSPECTION ENTRY BOUNDARY ─────────────────────────────────
         # In Machine Code: `cmp type(a), expected_type / jne _deopt_evacuation`
-        # Tracks Guard failures 100% synchronously.
+        # Tracks Guard failures 100% synchronously, thread-safe via lock.
         # ────────────────────────────────────────────────────────────────────
         if (type(a), type(b)) not in self.allowed_types:
-            self.deopt_count += 1
+            with self._deopt_lock:
+                self.deopt_count += 1
             return self.generic_fn(a, b)
             
         # Raw Instruction Execution — bypassing high-level dictionary lookup overheads

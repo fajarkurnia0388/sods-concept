@@ -5,7 +5,7 @@
 [![Version](https://img.shields.io/badge/version-2.1%20(Research%20PoC)-58a6ff.svg)](./prototype_sods.py)
 [![Theory](https://img.shields.io/badge/theory-Rice's%20Theorem%20Workaround-a371f7.svg)](./WHITEPAPER_EN.md)
 [![Genesis](https://img.shields.io/badge/genesis-Di%20TeknoIn%20Inspiration-ffbd2e.svg)](./GENESIS_EN.md)
-[![Speedup](https://img.shields.io/badge/speedup-4.5×%20to%207.14×%20(Simulated)-56d364.svg)](./prototype_sods.py)
+[![Speedup](https://img.shields.io/badge/speedup-3.5×%20to%207.14×%20(Simulated)-56d364.svg)](./prototype_sods.py)
 [![Vibe](https://img.shields.io/badge/vibe-Doom%20(1993)%20-Apple%20Task%20Manager%20Efficiency-f0883e.svg)](./GENESIS_EN.md)
 
 </div>
@@ -78,7 +78,7 @@ This repository presents a **Hybrid Research Design (*Design Science Research* &
 - **WASI I/O Boundary:** Intercepts functions with I/O side effects using *Taint Analysis*.
 - **Thread-Safety Locked:** Protected by `threading.Lock()` to handle concurrent execution in multithreaded or asyncio workloads.
 - **Tier-Lowering Protection:** Monitors volatile megamorphic call sites. If the guard failure ratio exceeds **30%**, the system permanently deoptimizes the specialized path and locks execution to safe generic mode.
-- **Scientific Performance Audit:** Eliminating Python's dynamic dispatch overhead yields throughput speedups of **4.5× to 7.14×**!
+- **Scientific Performance Audit:** Eliminating Python's dynamic dispatch overhead yields throughput speedups of **3.5× to 7.14×**!
 
 ### 3. ⚖️ [Scientific Benchmarks & Tests (`benchmarks/` & `tests/`)](./benchmarks)
 

@@ -1,13 +1,13 @@
 """
 PROTOTYPE: Sandbox Observer-Driven Specializer (SODS)
 ======================================================
-Versi 2.1 (Penyempurnaan Final — Produksi-Kritis)
+Versi 2.2 (Penyempurnaan Final — Produksi-Kritis)
 --------------------------------------------------
 Catatan Perubahan v2.0 → v2.1:
   [FIX] Blok kesimpulan akhir kini mengacu ke variabel `speedup` yang
         dihitung dinamis saat runtime, bukan nilai hardcode "7.14×".
         Nilai 7.14× adalah puncak yang tercatat; rata-rata empiris
-        adalah 4.5× – 7.14× bergantung pada beban kerja & Python runtime.
+        adalah 3.5× – 7.14× bergantung pada beban kerja & Python runtime.
   [FIX] Fungsi warm_run kini selalu mencetak header [WARM RUN] sebelum
         informasi status (Tier-Lowered / Spesialisasi / Generic), menjamin
         konsistensi keluaran konsol audit.
@@ -21,12 +21,35 @@ Catatan Perubahan v2.0 → v2.1:
   [ADD] Blok kesimpulan akhir menampilkan tabel ringkasan metrik yang
         lebih informatif.
 
+Catatan Perubahan v2.1 → v2.2:
+  [FIX] Ditambahkan UTF-8 stdout wrapper di awal main() untuk mencegah
+        UnicodeEncodeError pada terminal Windows (encoding cp1252 default).
+  [FIX] make_specialized_add() kini menggunakan class SpecializedFunction
+        (pola yang sama dengan src/sods/specializer.py), menggantikan
+        pendekatan bare closure sebelumnya. Ini menyinkronkan arsitektur
+        prototype dengan paket modular dan mengaktifkan pelacakan deopt
+        yang lebih akurat.
+  [FIX] benchmark_pure() kini menggunakan statistics.median() dari
+        7 pengulangan (bukan min() dari 5), konsisten dengan metodologi
+        bench_add.py untuk hasil yang lebih representatif.
+  [FIX] Rentang speedup empiris diperbarui ke "3.5× – 7.14×" untuk
+        mencakup hasil di lingkungan Windows (hasil sebelumnya: 4.5×).
+
+Catatan Arsitektur (Self-Contained):
+  File ini sengaja dirancang sebagai skrip demo MANDIRI (self-contained)
+  agar dapat dijalankan di platform seperti Claude.ai, Google Colab,
+  atau lingkungan lain tanpa instalasi paket tambahan. Implementasi
+  kanonik dengan thread-safety penuh, SHA-256 hashing, dan tes otomatis
+  tersedia di paket modular `src/sods/` dan `tests/test_sods.py`.
+
 Jalankan:
     python3 prototype_sods.py
 """
 
+import io
 import json
 import os
+import statistics
 import sys
 import time
 import random  # Digunakan untuk simulasi Timing Noise (lihat komentar Produksi)
@@ -132,16 +155,39 @@ class Profile:
 # ===========================================================================
 # KOMPONEN 3: SPECIALIZER — PIC & TIER-LOWERING PROTECTION
 # ===========================================================================
-def make_specialized_add(stable_signatures):
+class SpecializedFunction:
     """
-    Membangkitkan versi spesialisasi dengan Polymorphic Inline Caches (PIC).
-    Guard Injection mensimulasikan instruksi percabangan Assembly:
-        test rax, rax / cmp / jne → trigger_deopt_osr()
+    Objek callable yang membungkus Polymorphic Inline Cache (PIC).
+    Melacak kegagalan Guard secara sinkron via deopt_count.
+    Arsitektur ini disinkronkan dengan src/sods/specializer.py.
 
     [CATATAN PRODUKSI — Bab 5.5 Fase 2]
-    Dalam implementasi Cranelift/LLVM JIT, make_specialized_add digantikan
-    oleh emitter yang menghasilkan instruksi x86_64 / ARM64 native langsung,
-    bukan Python closure. Guard adalah instruksi `cmp` + `jne` pada register.
+    Dalam implementasi Cranelift/LLVM JIT, SpecializedFunction digantikan
+    oleh emitter yang menghasilkan instruksi x86_64 / ARM64 native langsung.
+    Guard adalah instruksi `cmp` + `jne` pada register.
+    """
+    def __init__(self, allowed_types, generic_fn, label):
+        self.allowed_types = allowed_types
+        self.generic_fn = generic_fn
+        self.label = label
+        self.deopt_count = 0
+
+    def __call__(self, a, b):
+        # ── GUARD INSPECTION ────────────────────────────────────────────────
+        # Simulasi: `cmp type(a), expected_type / jne deopt_stub`
+        # Jika tipe data di luar PIC table → OSR Deoptimization darurat
+        # ────────────────────────────────────────────────────────────────────
+        if (type(a), type(b)) not in self.allowed_types:
+            self.deopt_count += 1
+            return self.generic_fn(a, b)
+        # Eksekusi Instruksi Mentah — tanpa overhead dispatch table tingkat tinggi
+        return a + b
+
+
+def make_specialized_add(stable_signatures):
+    """
+    Membangkitkan objek SpecializedFunction dengan PIC untuk
+    tanda tangan tipe yang teramati selama Cold Run.
     """
     type_map = {
         ("int", "int"): (int, int),
@@ -151,24 +197,15 @@ def make_specialized_add(stable_signatures):
         ("int", "float"): (int, float),
         ("float", "int"): (float, int),
     }
-    
-    allowed_types = tuple(
-        type_map[sig] for sig in stable_signatures if sig in type_map
-    )
 
-    def polymorphic_fast_add(a, b, _deopt=generic_add):
-        # ── GUARD INSPECTION ────────────────────────────────────────────────
-        # Simulasi: `cmp type(a), expected_type / jne deopt_stub`
-        # Jika tipe data di luar PIC table → OSR Deoptimization darurat
-        # ────────────────────────────────────────────────────────────────────
-        if (type(a), type(b)) not in allowed_types:
-            return _deopt(a, b)
-            
-        # Eksekusi Instruksi Mentah — tanpa overhead dispatch table tingkat tinggi
-        return a + b
+    supported = [sig for sig in stable_signatures if sig in type_map]
+    allowed_types = tuple(type_map[sig] for sig in supported)
 
-    pic_label = f"Polymorphic Inline Cache (PIC: {len(stable_signatures)})"
-    return polymorphic_fast_add, pic_label
+    if not allowed_types:
+        return None, "Generic Passthrough (tidak ada PIC yang didukung)"
+
+    pic_label = f"Polymorphic Inline Cache (PIC: {len(supported)})"
+    return SpecializedFunction(allowed_types, generic_add, pic_label), pic_label
 
 # ===========================================================================
 # KOMPONEN 4 & 5: SANDBOX RUNNER — DENGAN TIER-LOWERING PERMANEN
@@ -257,22 +294,19 @@ class SODSSandbox:
             print(f" — tidak ada spesialisasi tersedia, menggunakan Generic.")
             sfn = generic_fn
 
-        # ── Loop Eksekusi Utama ───────────────────────────────────────────────
+        # Reset counter deopt di SpecializedFunction jika ada
+        if isinstance(sfn, SpecializedFunction):
+            sfn.deopt_count = 0
+
         results = []
-        deopt_count = 0
         total_calls = len(workloads)
-        
-        stable_sigs = self.profile.get_stable_signatures(fn_name)
-        
+
         for args in workloads:
             r = sfn(*args)
             results.append(r)
-            
-            # Hitung kegagalan Guard secara post-hoc (simulasi hardware deopt counter)
-            if fn_name not in self.tier_lowered and stable_sigs:
-                tsig = tuple(type(a).__name__ for a in args)
-                if tsig not in stable_sigs:
-                    deopt_count += 1
+
+        # Baca deopt_count dari SpecializedFunction (akurat & sinkron)
+        deopt_count = sfn.deopt_count if isinstance(sfn, SpecializedFunction) else 0
 
         # ── Evaluasi Pasca-Loop: Guard Failure & Tier-Lowering ────────────────
         if deopt_count > 0 and fn_name not in self.tier_lowered:
@@ -382,25 +416,34 @@ def verify_equivalence(fn_name, generic_fn, specialized_fn, test_inputs):
 # ===========================================================================
 # UTILITAS BENCHMARK — Pengukur Presisi Tinggi
 # ===========================================================================
-def benchmark_pure(callable_fn, repeats=5):
+def benchmark_pure(callable_fn, repeats=7):
     """
     Mengukur waktu eksekusi instruksi murni menggunakan perf_counter.
-    Mengambil nilai MINIMUM dari beberapa pengulangan untuk mengeleminir
-    noise scheduler OS (mirip dengan pendekatan `timeit.timeit` terbaik).
+    Mengambil nilai MEDIAN dari 7 pengulangan — lebih representatif
+    dan tahan terhadap outlier daripada min(), konsisten dengan
+    metodologi yang digunakan di benchmarks/bench_add.py.
     """
     times = []
     for _ in range(repeats):
         t0 = time.perf_counter()
         callable_fn()
         times.append((time.perf_counter() - t0) * 1000)
-    return min(times)  # ms
+    return statistics.median(times)  # ms
 
 # ===========================================================================
 # DEMO UTAMA
 # ===========================================================================
 def main():
+    # ── Fix Unicode: Konfigurasi stdout ke UTF-8 untuk terminal Windows ──────
+    # Mencegah UnicodeEncodeError (cp1252) saat mencetak karakter box-drawing
+    # seperti │, ┌, └, ═, ✓. Otomatis aktif hanya jika buffer tersedia.
+    if hasattr(sys.stdout, 'buffer'):
+        sys.stdout = io.TextIOWrapper(
+            sys.stdout.buffer, encoding='utf-8', errors='replace'
+        )
+
     print("=" * 72)
-    print("  PROTOTYPE SODS v2.1 — Sandbox Observer-Driven Specializer".center(72))
+    print("  PROTOTYPE SODS v2.2 — Sandbox Observer-Driven Specializer".center(72))
     print("  PIC │ Tier-Lowering │ WASI Boundary │ OSR Deopt │ Cookie Cache".center(72))
     print("=" * 72)
 
@@ -461,7 +504,7 @@ def main():
     print(f"  │ SPEEDUP               : {speedup:>8.2f}× lebih cepat     │")
     print(f"  └─────────────────────────────────────────────────────┘")
     print(f"\n  >>> PENCAPAIAN SPEEDUP: {speedup:.2f}× LEBIH CEPAT!")
-    print(f"      (Rentang empiris: 4.5× – 7.14× bergantung kondisi OS & Python runtime)")
+    print(f"      (Rentang empiris: 3.5× – 7.14× bergantung kondisi OS & Python runtime)")
 
     # ─────────────────────────────────────────────────────────────────────────
     # TAHAP 4: UJI PERBATASAN I/O — WASI Syscall Intersepsi (Taint Analysis)
@@ -523,7 +566,7 @@ def main():
     # TABEL KESIMPULAN AUDIT
     # ─────────────────────────────────────────────────────────────────────────
     print("\n" + "═" * 72)
-    print("  KESIMPULAN AUDIT PROTOTIPE SODS v2.1".center(72))
+    print("  KESIMPULAN AUDIT PROTOTIPE SODS v2.2".center(72))
     print("═" * 72)
     print(f"""
   ┌────┬───────────────────────────────────────┬──────────────────┐
@@ -537,7 +580,7 @@ def main():
   │ 6  │ Equivalence Verifier (Akali Rice)     │ ✓ TERBUKTI       │
   ├────┼───────────────────────────────────────┼──────────────────┤
   │ ★  │ Speedup Komputasi ({speedup:.2f}× sesi ini)    │ {speedup:.2f}× LEBIH CEPAT │
-  │    │ Rentang Empiris Tercatat              │ 4.5× – 7.14×     │
+  │    │ Rentang Empiris Tercatat              │ 3.5× – 7.14×     │
   └────┴───────────────────────────────────────┴──────────────────┘
 
   Seluruh rintangan industri (PIC, WASI, OSR, Tier-Lowering) terbukti

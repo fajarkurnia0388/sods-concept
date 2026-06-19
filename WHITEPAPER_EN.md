@@ -253,7 +253,7 @@ The 5-stage specialization pipeline runs as follows:
 
 ### 5.3 Evaluation of Educational PoC Implementation
 Our Python implementation (`src/sods`) demonstrates PICs, OSR deoptimization, and Tier-Lowering (deactivating the fast path permanently if deopt ratio >30%).
-- **Speedup:** Achieves **4.5× to 7.14× speedup** over the bloated generic Python code. We honestly attribute this speedup to *Python interpreter dispatch overhead elimination*, not raw machine code generation.
+- **Speedup:** Achieves **3.5× to 7.14× speedup** over the bloated generic Python code. We honestly attribute this speedup to *Python interpreter dispatch overhead elimination*, not raw machine code generation.
 - **Correctness:** 100% correct calculations through fallback paths.
 - **Tier-Lowering:** Successfully burns out volatile megamorphic call sites.
 
@@ -283,7 +283,7 @@ We map out solutions to 5 main systems obstacles:
 ### 6.1 Conclusions
 1. **Universal Converter Myth Busted:** A tool that magically converts any arbitrary program to its most efficient form is theoretically impossible due to Rice's Theorem.
 2. **SODS Validated:** Speculative runtime specialization is mathematically sound and has been proven in production JIT environments.
-3. **JIT Simulation Successful:** The Python PoC successfully demonstrated PIC generation, OSR, and tier-lowering with 4.5x-7.14x speedups.
+3. **JIT Simulation Successful:** The Python PoC successfully demonstrated PIC generation, OSR, and tier-lowering with 3.5x-7.14x speedups.
 4. **Radical Optimization Requires Intent:** Real-world performance leaps come from framework changes (Tauri) and Rust/WASM rewrites.
 5. **Economic Incentives Rule:** Wirth's Law persists because business prioritizes release velocity over CPU cycles.
 

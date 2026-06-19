@@ -11,3 +11,8 @@ build/
 *.egg-info/
 .coverage
 htmlcov/
+
+# Temporary/IDE artifact directories
+scratch/
+
+evaluation_report.md
