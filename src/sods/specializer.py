@@ -26,7 +26,7 @@ class SpecializedFunction:
             self.deopt_count += 1
             return self.generic_fn(a, b)
             
-        # Silikon Eksekusi Mentah — bypassing high-level dictionary lookup overheads
+        # Eksekusi Instruksi Mentah — bypassing high-level dictionary lookup overheads
         return a + b
 
 def make_specialized_add(stable_signatures: List[Tuple[str, str]], generic_fn: Callable) -> Tuple[Callable, str, List[Tuple[str, str]]]:

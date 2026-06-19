@@ -164,7 +164,7 @@ def make_specialized_add(stable_signatures):
         if (type(a), type(b)) not in allowed_types:
             return _deopt(a, b)
             
-        # Silikon Eksekusi Mentah — tanpa overhead dispatch table tingkat tinggi
+        # Eksekusi Instruksi Mentah — tanpa overhead dispatch table tingkat tinggi
         return a + b
 
     pic_label = f"Polymorphic Inline Cache (PIC: {len(stable_signatures)})"
@@ -384,7 +384,7 @@ def verify_equivalence(fn_name, generic_fn, specialized_fn, test_inputs):
 # ===========================================================================
 def benchmark_pure(callable_fn, repeats=5):
     """
-    Mengukur waktu eksekusi silikon murni menggunakan perf_counter.
+    Mengukur waktu eksekusi instruksi murni menggunakan perf_counter.
     Mengambil nilai MINIMUM dari beberapa pengulangan untuk mengeleminir
     noise scheduler OS (mirip dengan pendekatan `timeit.timeit` terbaik).
     """
@@ -437,7 +437,7 @@ def main():
         return
 
     # ─────────────────────────────────────────────────────────────────────────
-    # TAHAP 3: WARM RUN BENCHMARK — Komparasi Performa Silikon
+    # TAHAP 3: WARM RUN BENCHMARK — Komparasi Performa Throughput
     # ─────────────────────────────────────────────────────────────────────────
     print("\n" + "═" * 72)
     print(f"  TAHAP 3: WARM RUN BENCHMARK — {N:,} Operasi Komputasi".center(72))
