@@ -137,7 +137,7 @@ class SODSSandbox:
             with self._lock:
                 # Check again under lock in case another concurrent thread already burned it
                 if fn_name not in self.tier_lowered:
-                    print(f"  [OSR DEOPT] {deopt_count}x synchronous Guard failures -> transparan fallback to Generic Target (SAFE).")
+                    print(f"  [OSR DEOPT] {deopt_count}x synchronous Guard failures -> transparent fallback to Generic Target (SAFE).")
                     
                     deopts_so_far, calls_so_far = self.deopt_ratios.get(fn_name, (0, 0))
                     new_deopts = deopts_so_far + deopt_count
@@ -188,10 +188,10 @@ class SODSSandbox:
             with open(self.profile_path, "w") as f:
                 json.dump(data, f, indent=2)
                 
-            print(f"\n[COOKIE] Serialisasi Cookie berhasil. Metadata tersimpan ke: {self.profile_path}")
+            print(f"\n[COOKIE] Cookie serialization successful. Metadata saved to: {self.profile_path}")
             print(f"  • Program SHA-256 : {data['program_hash'][:16]}...")
-            print(f"  • Modul Aktif     : {list(self.specialized.keys())}")
-            print(f"  • Tier-Lowered    : {list(self.tier_lowered) or 'Tidak ada'}")
+            print(f"  • Active Modules  : {list(self.specialized.keys())}")
+            print(f"  • Tier-Lowered    : {list(self.tier_lowered) or 'None'}")
 
     def load_cookie(self) -> bool:
         """Loads profile metadata during a warm application start."""
@@ -216,7 +216,7 @@ class SODSSandbox:
                     sfn, label, supp_sigs = make_specialized_add(stable, gadd)
                     self.specialized[fn] = (sfn, label, supp_sigs)
 
-            print(f"[COOKIE LOADER] Berhasil memuat Cookie (Schema v{data.get('schema_version', 1)}) dari {self.profile_path}.")
-            print(f"  Modul aktif      : {list(self.specialized.keys())}")
-            print(f"  Tier-Lowered locked: {list(self.tier_lowered) or 'Tidak ada'}")
+            print(f"[COOKIE LOADER] Successfully loaded Cookie (Schema v{data.get('schema_version', 1)}) from {self.profile_path}.")
+            print(f"  Active modules   : {list(self.specialized.keys())}")
+            print(f"  Tier-Lowered lock: {list(self.tier_lowered) or 'None'}")
             return True

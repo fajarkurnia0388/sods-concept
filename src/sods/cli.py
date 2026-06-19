@@ -66,7 +66,7 @@ def main():
         results, deopts = sandbox.warm_run(args.target, generic_add, workloads)
         print(f"\n [SUCCESS] {args.workload_size:,} dynamic operations completed.")
         print(f" • Sample Output  : {results[:3]}...")
-        print(f" • OSR Evacuations: {deopts}x failures -> transparan fallback triggered.")
+        print(f" • OSR Evacuations: {deopts}x failures -> transparent fallback triggered.")
 
     elif args.command == "verify":
         print("=" * 72)
