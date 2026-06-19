@@ -41,7 +41,7 @@ Saat pemula belajar membangun aplikasi desktop menggunakan HTML/JS/Python, merek
 
 - **Potensi Tool SODS:** Jika konverter otonom SODS tersedia, pemula cukup menulis kode JS/Python murni yang biasa mereka tulis. Tool SODS akan membungkus, memantau, dan menyihir aplikasi mereka di belakang layar menjadi secepat dan seringan biner C. Mereka dapat memamerkan aplikasi yang berjalan mulus di laptop lama atau ponsel murah tanpa perlu mempelajari teknik optimisasi Rust/C yang luar biasa rumit.
 
-### ⚡ 2. Bagi Profesional Web / Mobile (_Intermediate Frontend / Mobile Devs_): "Performa Silikon Tanpa Perlu Rewrite Bahasa"
+### ⚡ 2. Bagi Profesional Web / Mobile (_Intermediate Frontend / Mobile Devs_): "Performa Perangkat Keras Tanpa Perlu Rewrite Bahasa"
 
 Pengembang kontemporer kerap dituntut membangun komputasi berat di klien (_rendering_ data 10.000 baris, kanvas grafis, atau kriptografi lokal). Saat ini, satu-satunya cara mendapatkan performa tinggi adalah mempelajari **Rust** atau **Zig** untuk dikompilasi ke WebAssembly. Bagi banyak tim, kurva belajar Rust yang teramat curam memicu anjloknya produktivitas pengerjaan fitur (_velocity drop_).
 
@@ -53,9 +53,9 @@ Di perusahaan berskala _Enterprise / Unicorn_, peladen _backend_ monolitik (Node
 
 - **Potensi Tool SODS:** Diinstrumenkan di tingkat _Container Hypervisor_ (seperti _Wasmtime Fuel Pods_ atau _eBPF Mesh_), setiap mikrolayanan perusahaan akan dispesialisasi secara empiris saat peladen berjalan. Pengurangan _jejak memori_ hingga 70% dan pemotongan siklus CPU berarti peladen sanggup menelan trafik **3× lipat di atas infrastruktur hardware yang persis sama**. Korporasi menghemat anggaran tagihan peladen (_cloud billing_) hingga jutaan dolar per tahun dan menaikkan marjin laba bisnis.
 
-### 🌍 4. Bagi Penggiat Green Computing & Ekosistem Makro: "Menyelamatkan Silikon Lawas dan Bumi"
+### 🌍 4. Bagi Penggiat Green Computing & Ekosistem Makro: "Menyelamatkan Perangkat Keras Lawas dan Bumi"
 
-Jutaan laptop lama dan perangkat ponsel dibuang ke tempat sampah setiap tahun menjadi limbah elektronik (_e-waste_) semata-mata karena silikon mereka tidak sanggup lagi menahan sistem operasi dan aplikasi obrolan modern yang memakan RAM berkuintal-kuintal.
+Jutaan laptop lama dan perangkat ponsel dibuang ke tempat sampah setiap tahun menjadi limbah elektronik (_e-waste_) semata-mata karena perangkat keras mereka tidak sanggup lagi menahan sistem operasi dan aplikasi obrolan modern yang memakan RAM berkuintal-kuintal.
 
 - **Potensi Tool SODS:** Konverter otonom SODS bertindak sebagai **Pahlawan Aksesibilitas Digital Global**. Dengan merampingkan eksekusi perangkat lunak dari luar, alat ini memperpanjang umur masa pakai hardware lama selama 5–10 tahun, menekan laju limbah _e-waste_, dan menurunkan jejak emisi karbon dari peladen pusat data di seluruh dunia.
 
@@ -71,7 +71,7 @@ Repositori ini menyajikan **Desain Penelitian Hibrida (_Design Science Research_
 - Naskah riset mendalam yang diformat khusus untuk ekosistem _Open-Source_ dengan strata bukti transparan (**T1 Primer Kanonik** hingga **T4 Anekdot Forum**).
 - **Audit Kesenjangan Realitas Roadmap:** Memisahkan secara tegas antara implementasi PoC Python saat ini berbanding peta jalan rekayasa kernel OS sejati.
 - **Bab 5.6 Terdepan:** Mengurai peta mitigasi 5 rintangan produksi melalui _Selective Taint Analysis (Mozilla `rr`)_, intersepsi kernel tanpa modifikasi (_eBPF_ + _DynamoRIO_), _Hardware PMU Statistical Sampling (&lt;1% overhead)_, dan _Timing Noise Randomization_.
-- **Injeksi PEP 669:** Menganalisis pemanfaatan modul Python 3.12+ `sys.monitoring` sebagai jembatan _tracing_ silikon bebas _overhead_.
+- **Injeksi PEP 669:** Menganalisis pemanfaatan modul Python 3.12+ `sys.monitoring` sebagai jembatan _tracing_ tingkat rendah bebas _overhead_.
 
 ### 2. 💻 [Paket Perangkat Lunak Modular (`src/sods`)](./src/sods)
 

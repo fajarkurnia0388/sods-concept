@@ -1,7 +1,7 @@
 # 🎬 Genesis Proyek: Narasi Filosofis "Ketika Performance Bukan Prioritas Lagi"
 
 > Arsitektur **SODS (_Sandbox Observer-Driven Specializer_)** terlahir dari sebuah momen pencerahan mendadak setelah menyimak video esai fenomenal dari kanal YouTube **Di TeknoIn** berjudul [Ketika Performance Bukan Prioritas Lagi](https://www.youtube.com/watch?v=7zZSxjh72yk).  
-> Dokumen ini menyajikan penulisan ulang narasi esai tersebut—mengurai benang merah dari keanggunan silikon masa lalu, kehancuran ekosistem perangkat lunak modern, hingga terobosan rekayasa sistem yang memicu berdirinya repositori **`sods-runtime`**.
+> Dokumen ini menyajikan penulisan ulang narasi esai tersebut—mengurai benang merah dari keanggunan perangkat keras masa lalu, kehancuran ekosistem perangkat lunak modern, hingga terobosan rekayasa sistem yang memicu berdirinya repositori **`sods-runtime`**.
 
 ---
 
@@ -71,10 +71,10 @@ Melalui SODS, Fajar memodelkan sebuah tool perantara yang **mendistribusikan kea
 
 ---
 
-## 🌟 Penutup: Manifesto Pencerahan Silikon
+## 🌟 Penutup: Manifesto Pencerahan Perangkat Keras
 
 Game _Sifu_ (2022) sanggup menghadirkan dunia aksi 3D yang begitu menakjubkan hanya di dalam ukuran **1.2 GB**, berjalan lancar di hardware berusia 10 tahun. Sementara game AAA lain menuntut _storage_ 150 GB and masih sering mengalami _stuttering_.
 
-Hal ini membuktikan satu kebenaran mutlak: **Efisiensi bukanlah keahlian yang hilang dari dunia rekayasa komputasi, melainkan insentifnya yang telah terlupakan**. Melalui arsitektur SODS, kita mengembalikan insentif keanggunan tersebut, membuktikan bahwa perangkat lunak modern tetap sanggup berjalan seramping dan sekencang silikon mentah era Apollo 11.
+Hal ini membuktikan satu kebenaran mutlak: **Efisiensi bukanlah keahlian yang hilang dari dunia rekayasa komputasi, melainkan insentifnya yang telah terlupakan**. Melalui arsitektur SODS, kita mengembalikan insentif keanggunan tersebut, membuktikan bahwa perangkat lunak modern tetap sanggup berjalan seramping dan sekencang perangkat keras mentah era Apollo 11.
 
 Terima kasih, **Di TeknoIn**, atas karya yang telah menggetarkan nalar dan memicu berdirinya rancang bangun mahakarya riset ini!
