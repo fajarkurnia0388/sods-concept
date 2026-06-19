@@ -30,33 +30,33 @@ Proyek ini memodelkan filosofi kompilator JIT modern (_V8_, _PyPy_, _GraalVM_) s
 
 ---
 
-## 🌟 Potensi Raksasa Jika Perkakas SODS Kelak Dibangun (Why SODS Matters)
+## 🌟 Potensi Raksasa Jika Tools SODS Kelak Dibangun (Why SODS Matters)
 
-Agar setiap tingkatan profesional memahami dampak revolusioner riset ini, kami memetakan apa yang akan terjadi jika Peta Jalan SODS kelak diwujudkan menjadi perkakas produksi nyata (misal: `sods-pack` atau `ExoRuntime`):
+Agar setiap tingkatan profesional memahami dampak revolusioner riset ini, kami memetakan apa yang akan terjadi jika Peta Jalan SODS kelak diwujudkan menjadi production tools nyata (misal: `sods-pack` atau `ExoRuntime`):
 
 ### 🌱 1. Bagi Pemula (_Junior Developers / Students_): "Membuat Aplikasi Ringan Tanpa Sakit Kepala"
 
 Saat pemula belajar membangun aplikasi desktop menggunakan HTML/JS/Python, mereka sering menggunakan framework _Electron_ atau _PyQt_. Namun mereka terkejut dan berkecil hati saat melihat aplikasi kalkulator sederhana buatan mereka berukuran **150 MB** dan memakan RAM **300 MB**.
 
-- **Potensi Perkakas SODS:** Jika konverter otonom SODS tersedia, pemula cukup menulis kode JS/Python murni yang biasa mereka tulis. Perkakas SODS akan membungkus, memantau, dan menyihir aplikasi mereka di belakang layar menjadi secepat dan seringan biner C. Mereka dapat memamerkan aplikasi yang berlari mulus di laptop lama atau ponsel murah tanpa perlu mempelajari teknik optimisasi Rust/C yang luar biasa rumit.
+- **Potensi Tool SODS:** Jika konverter otonom SODS tersedia, pemula cukup menulis kode JS/Python murni yang biasa mereka tulis. Tool SODS akan membungkus, memantau, dan menyihir aplikasi mereka di belakang layar menjadi secepat dan seringan biner C. Mereka dapat memamerkan aplikasi yang berjalan mulus di laptop lama atau ponsel murah tanpa perlu mempelajari teknik optimisasi Rust/C yang luar biasa rumit.
 
 ### ⚡ 2. Bagi Profesional Web / Mobile (_Intermediate Frontend / Mobile Devs_): "Performa Silikon Tanpa Perlu Rewrite Bahasa"
 
 Pengembang kontemporer kerap dituntut membangun komputasi berat di klien (_rendering_ data 10.000 baris, kanvas grafis, atau kriptografi lokal). Saat ini, satu-satunya cara mendapatkan performa tinggi adalah mempelajari **Rust** atau **Zig** untuk dikompilasi ke WebAssembly. Bagi banyak tim, kurva belajar Rust yang teramat curam memicu anjloknya produktivitas pengerjaan fitur (_velocity drop_).
 
-- **Potensi Perkakas SODS:** Pengembang cukup mempertahankan basis kode **TypeScript** atau **Python** mapan mereka. Mesin _Runtime Wrapper_ SODS akan mencegat eksekusi, menjejak _Hot Paths_, dan memancarkan instruksi Assembly/WASM murni _on-the-fly_. Tim memperoleh **kecepatan 3×–5× lipat "gratis"** tanpa mengorbankan kecepatan penyerahan fitur.
+- **Potensi Tool SODS:** Pengembang cukup mempertahankan basis kode **TypeScript** atau **Python** mapan mereka. Mesin _Runtime Wrapper_ SODS akan mencegat eksekusi, menjejak _Hot Paths_, dan memancarkan instruksi Assembly/WASM murni _on-the-fly_. Tim memperoleh **kecepatan 3×–5× lipat "gratis"** tanpa mengorbankan kecepatan penyerahan fitur.
 
 ### 🏢 3. Bagi Arsitek Cloud & Eksekutif Bisnis (_Senior Cloud/Backend Enterprise Architects_): "Memotong Tagihan Server AWS / Cloud Hingga Jutaan Dolar"
 
 Di perusahaan berskala _Enterprise / Unicorn_, peladen _backend_ monolitik (Node.js, Python, Ruby) menangani miliaran permintaan per hari. Kelemahan _overhead_ bahasa dinamis memaksa korporasi membakar uang menyewa ribuan instansi _Kubernetes pod_ atau _AWS EC2_ berkapasitas RAM gajah dan prosesor mahal.
 
-- **Potensi Perkakas SODS:** Diinstrumenkan di tingkat _Container Hypervisor_ (seperti _Wasmtime Fuel Pods_ atau _eBPF Mesh_), setiap mikrolayanan perusahaan akan dispesialisasi secara empiris saat peladen berlari. Pengurangan _jejak memori_ hingga 70% dan pemotongan siklus CPU berarti peladen sanggup menelan trafik **3× lipat di atas infrastruktur perangkat keras yang persis sama**. Korporasi menghemat anggaran tagihan peladen (_cloud billing_) hingga jutaan dolar per tahun dan menaikkan marjin laba bisnis.
+- **Potensi Tool SODS:** Diinstrumenkan di tingkat _Container Hypervisor_ (seperti _Wasmtime Fuel Pods_ atau _eBPF Mesh_), setiap mikrolayanan perusahaan akan dispesialisasi secara empiris saat peladen berjalan. Pengurangan _jejak memori_ hingga 70% dan pemotongan siklus CPU berarti peladen sanggup menelan trafik **3× lipat di atas infrastruktur hardware yang persis sama**. Korporasi menghemat anggaran tagihan peladen (_cloud billing_) hingga jutaan dolar per tahun dan menaikkan marjin laba bisnis.
 
 ### 🌍 4. Bagi Penggiat Green Computing & Ekosistem Makro: "Menyelamatkan Silikon Lawas dan Bumi"
 
 Jutaan laptop lama dan perangkat ponsel dibuang ke tempat sampah setiap tahun menjadi limbah elektronik (_e-waste_) semata-mata karena silikon mereka tidak sanggup lagi menahan sistem operasi dan aplikasi obrolan modern yang memakan RAM berkuintal-kuintal.
 
-- **Potensi Perkakas SODS:** Konverter otonom SODS bertindak sebagai **Pahlawan Aksesibilitas Digital Global**. Dengan merampingkan eksekusi perangkat lunak dari luar, alat ini memperpanjang umur masa pakai perangkat keras lama selama 5–10 tahun, menekan laju limbah _e-waste_, dan menurunkan jejak emisi karbon dari peladen pusat data di seluruh dunia.
+- **Potensi Tool SODS:** Konverter otonom SODS bertindak sebagai **Pahlawan Aksesibilitas Digital Global**. Dengan merampingkan eksekusi perangkat lunak dari luar, alat ini memperpanjang umur masa pakai hardware lama selama 5–10 tahun, menekan laju limbah _e-waste_, dan menurunkan jejak emisi karbon dari peladen pusat data di seluruh dunia.
 
 ---
 
@@ -92,7 +92,7 @@ Repositori ini menyajikan **Desain Penelitian Hibrida (_Design Science Research_
 
 ---
 
-## 🚀 Cara Menjalankan Perkakas CLI & Prototipe
+## 🚀 Cara Menjalankan CLI Tools & Prototipe
 
 Anda dapat mengeksekusi dan mengaudit prototipe menggunakan titik masuk CLI yang elegan:
 
@@ -104,7 +104,7 @@ cd sods-runtime
 # Install paket secara editable
 pip install -e .
 
-# ── 1. Eksplorasi Perkakas CLI ──────────────────────────────────────────────
+# ── 1. Eksplorasi CLI Tools ──────────────────────────────────────────────
 sods observe --target generic_add --workload-size 1000
 sods specialize --target generic_add --workload-size 25000
 sods verify --target generic_add
