@@ -27,6 +27,7 @@ Jalankan:
 
 import json
 import os
+import sys
 import time
 import random  # Digunakan untuk simulasi Timing Noise (lihat komentar Produksi)
 
@@ -147,6 +148,8 @@ def make_specialized_add(stable_signatures):
         ("float", "float"): (float, float),
         ("str", "str"): (str, str),
         ("list", "list"): (list, list),
+        ("int", "float"): (int, float),
+        ("float", "int"): (float, int),
     }
     
     allowed_types = tuple(
@@ -303,6 +306,10 @@ class SODSSandbox:
         """
         os.makedirs(CACHE_DIR, exist_ok=True)
         data = {
+            "schema_version": 2,
+            "runtime": "sods-python-experimental-poc",
+            "python_version": sys.version,
+            "timestamp": time.time(),
             "profile": {
                 "type_seen": {
                     k: {",".join(t): c for t, c in v.items()}

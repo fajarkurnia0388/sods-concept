@@ -23,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Compilers",
     "Topic :: Software Development :: Interpreters",
 ]
@@ -32,6 +33,9 @@ dependencies = []
 Homepage = "https://github.com/fajarkurnia0388/sods-concept"
 Documentation = "https://fajarkurnia0388.github.io/sods-concept/arsitektur_sods.html"
 Repository = "https://github.com/fajarkurnia0388/sods-concept"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
