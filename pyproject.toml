@@ -29,10 +29,13 @@ classifiers = [
 ]
 dependencies = []
 
+[project.scripts]
+sods = "sods.cli:main"
+
 [project.urls]
-Homepage = "https://github.com/fajarkurnia0388/sods-concept"
-Documentation = "https://fajarkurnia0388.github.io/sods-concept/arsitektur_sods.html"
-Repository = "https://github.com/fajarkurnia0388/sods-concept"
+Homepage = "https://github.com/fajarkurnia0388/sods-runtime"
+Documentation = "https://fajarkurnia0388.github.io/sods-runtime/arsitektur_sods.html"
+Repository = "https://github.com/fajarkurnia0388/sods-runtime"
 
 [tool.setuptools.packages.find]
 where = ["src"]

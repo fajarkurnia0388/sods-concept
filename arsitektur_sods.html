@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Arsitektur SODS — Sandbox Observer-Driven Specializer (v2.1)</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
       background: #0a0e17;
@@ -13,8 +19,13 @@
       padding: 28px 24px;
       line-height: 1.55;
     }
+
     /* ── Header ────────────────────────────────────────────────────────── */
-    .header { text-align: center; margin-bottom: 28px; }
+    .header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
     .header h1 {
       color: #58a6ff;
       font-size: 20px;
@@ -22,11 +33,13 @@
       letter-spacing: 0.02em;
       margin-bottom: 4px;
     }
+
     .header .sub {
       color: #6e7681;
       font-size: 12px;
       font-family: -apple-system, 'Segoe UI', sans-serif;
     }
+
     .header .tag {
       display: inline-block;
       margin: 6px 4px 0;
@@ -38,6 +51,7 @@
       border-radius: 10px;
       font-family: -apple-system, 'Segoe UI', sans-serif;
     }
+
     /* ── Pipeline container ─────────────────────────────────────────────── */
     .pipeline {
       display: flex;
@@ -46,6 +60,7 @@
       max-width: 900px;
       margin: 0 auto;
     }
+
     /* ── Stage card ─────────────────────────────────────────────────────── */
     .stage {
       position: relative;
@@ -55,7 +70,12 @@
       padding: 18px 18px 16px 60px;
       margin-bottom: 4px;
     }
-    .stage:hover { border-color: #3d4652; transition: border-color 0.15s; }
+
+    .stage:hover {
+      border-color: #3d4652;
+      transition: border-color 0.15s;
+    }
+
     .stage-num {
       position: absolute;
       top: 50%;
@@ -73,11 +93,28 @@
       font-weight: 700;
       font-size: 13px;
     }
+
     /* Colour variants per stage */
-    .stage.s1 .stage-num { border-color: #388bfd; color: #79c0ff; }
-    .stage.s2 .stage-num { border-color: #56d364; color: #56d364; }
-    .stage.s3 .stage-num { border-color: #a371f7; color: #d2a8ff; }
-    .stage.s5 .stage-num { border-color: #f0883e; color: #ffa657; }
+    .stage.s1 .stage-num {
+      border-color: #388bfd;
+      color: #79c0ff;
+    }
+
+    .stage.s2 .stage-num {
+      border-color: #56d364;
+      color: #56d364;
+    }
+
+    .stage.s3 .stage-num {
+      border-color: #a371f7;
+      color: #d2a8ff;
+    }
+
+    .stage.s5 .stage-num {
+      border-color: #f0883e;
+      color: #ffa657;
+    }
+
     .stage-header {
       display: flex;
       align-items: baseline;
@@ -86,12 +123,14 @@
       flex-wrap: wrap;
       gap: 6px;
     }
+
     .stage-title {
       color: #e6edf3;
       font-size: 14px;
       font-weight: 700;
       font-family: -apple-system, 'Segoe UI', sans-serif;
     }
+
     .stage-badge {
       font-size: 11px;
       background: #1a2030;
@@ -102,15 +141,25 @@
       font-family: -apple-system, 'Segoe UI', sans-serif;
       white-space: nowrap;
     }
+
     .stage-desc {
       color: #7d8590;
       font-size: 12px;
       margin-bottom: 12px;
       font-family: -apple-system, 'Segoe UI', sans-serif;
     }
+
     /* ── Component grid inside each stage ──────────────────────────────── */
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .grid.single { grid-template-columns: 1fr; }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid.single {
+      grid-template-columns: 1fr;
+    }
+
     .comp {
       background: #0d1117;
       border-radius: 7px;
@@ -120,20 +169,62 @@
       border-left: 3px solid #30363d;
       font-family: -apple-system, 'Segoe UI', sans-serif;
     }
-    .comp b { display: block; margin-bottom: 3px; font-size: 12.5px; }
+
+    .comp b {
+      display: block;
+      margin-bottom: 3px;
+      font-size: 12.5px;
+    }
+
     /* Border-left colour variants — ISOLATED from legend dot classes */
-    .comp-green  { border-left-color: #3fb950; }
-    .comp-green  b { color: #3fb950; }
-    .comp-orange { border-left-color: #e3b341; }
-    .comp-orange b { color: #e3b341; }
-    .comp-red    { border-left-color: #f85149; }
-    .comp-red    b { color: #f85149; }
-    .comp-blue   { border-left-color: #388bfd; }
-    .comp-blue   b { color: #79c0ff; }
-    .comp-purple { border-left-color: #a371f7; }
-    .comp-purple b { color: #d2a8ff; }
-    .comp-teal   { border-left-color: #39d3c0; }
-    .comp-teal   b { color: #39d3c0; }
+    .comp-green {
+      border-left-color: #3fb950;
+    }
+
+    .comp-green b {
+      color: #3fb950;
+    }
+
+    .comp-orange {
+      border-left-color: #e3b341;
+    }
+
+    .comp-orange b {
+      color: #e3b341;
+    }
+
+    .comp-red {
+      border-left-color: #f85149;
+    }
+
+    .comp-red b {
+      color: #f85149;
+    }
+
+    .comp-blue {
+      border-left-color: #388bfd;
+    }
+
+    .comp-blue b {
+      color: #79c0ff;
+    }
+
+    .comp-purple {
+      border-left-color: #a371f7;
+    }
+
+    .comp-purple b {
+      color: #d2a8ff;
+    }
+
+    .comp-teal {
+      border-left-color: #39d3c0;
+    }
+
+    .comp-teal b {
+      color: #39d3c0;
+    }
+
     /* ── Connector arrows ───────────────────────────────────────────────── */
     .connector {
       text-align: center;
@@ -143,12 +234,14 @@
       padding: 3px 0;
       user-select: none;
     }
+
     /* ── Stage 4: Cookie Cache ──────────────────────────────────────────── */
     .cookie-stage {
       position: relative;
       max-width: 900px;
       margin: 4px auto;
     }
+
     .cookie-num {
       position: absolute;
       top: 50%;
@@ -168,6 +261,7 @@
       font-family: monospace;
       z-index: 1;
     }
+
     .cookie-box {
       background: #120e00;
       border: 2px dashed #4a3d00;
@@ -175,17 +269,20 @@
       padding: 14px 16px 14px 60px;
       font-family: -apple-system, 'Segoe UI', sans-serif;
     }
+
     .cookie-box .cookie-title {
       color: #e3b341;
       font-weight: 700;
       font-size: 14px;
       margin-bottom: 5px;
     }
+
     .cookie-box .cookie-desc {
       color: #7d7220;
       font-size: 12px;
       margin-bottom: 8px;
     }
+
     .cookie-box .cookie-path {
       display: inline-block;
       background: #0d1117;
@@ -196,11 +293,13 @@
       font-size: 12px;
       font-family: 'SF Mono', monospace;
     }
+
     .cookie-box .cookie-meta {
       color: #6a6020;
       font-size: 11px;
       margin-top: 6px;
     }
+
     /* ── Section divider ────────────────────────────────────────────────── */
     .section-label {
       max-width: 900px;
@@ -213,6 +312,7 @@
       border-bottom: 1px solid #1e2530;
       padding-bottom: 6px;
     }
+
     /* ── Bab 5.6 Mitigasi Panel ─────────────────────────────────────────── */
     .mitigations {
       max-width: 900px;
@@ -221,6 +321,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 10px;
     }
+
     .mitigation-card {
       background: #0d1117;
       border: 1px solid #1e2530;
@@ -228,38 +329,52 @@
       padding: 12px 14px;
       font-family: -apple-system, 'Segoe UI', sans-serif;
     }
+
     .mitigation-card .m-header {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 6px;
     }
+
     .m-num {
       background: #161b22;
       border: 1px solid #30363d;
       color: #8b949e;
-      width: 22px; height: 22px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 700; flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
     }
+
     .mitigation-card .m-title {
       font-size: 12.5px;
       font-weight: 700;
       color: #e6edf3;
     }
+
     .mitigation-card .m-tool {
       font-size: 11px;
       color: #3fb950;
       font-family: 'SF Mono', monospace;
       margin-bottom: 5px;
     }
+
     .mitigation-card .m-desc {
       font-size: 11.5px;
       color: #7d8590;
       line-height: 1.5;
     }
-    .mitigation-card.spans-2 { grid-column: 1 / -1; }
+
+    .mitigation-card.spans-2 {
+      grid-column: 1 / -1;
+    }
+
     /* ── Legend ─────────────────────────────────────────────────────────── */
     .legend {
       max-width: 900px;
@@ -276,23 +391,47 @@
       justify-content: center;
       font-family: -apple-system, 'Segoe UI', sans-serif;
     }
+
     .legend-item {
       display: flex;
       align-items: center;
       gap: 7px;
     }
+
     /* dot classes are PREFIXED to avoid collision with comp colour classes */
     .dot {
-      width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
     }
-    .dot-green  { background: #3fb950; }
-    .dot-orange { background: #e3b341; }
-    .dot-blue   { background: #79c0ff; }
-    .dot-purple { background: #d2a8ff; }
-    .dot-teal   { background: #39d3c0; }
-    .dot-red    { background: #f85149; }
+
+    .dot-green {
+      background: #3fb950;
+    }
+
+    .dot-orange {
+      background: #e3b341;
+    }
+
+    .dot-blue {
+      background: #79c0ff;
+    }
+
+    .dot-purple {
+      background: #d2a8ff;
+    }
+
+    .dot-teal {
+      background: #39d3c0;
+    }
+
+    .dot-red {
+      background: #f85149;
+    }
   </style>
 </head>
+
 <body>
   <div class="header">
     <h1>Arsitektur SODS — Sandbox Observer-Driven Specializer</h1>
@@ -301,7 +440,7 @@
     <span class="tag">eBPF · PMU Sampling · Taint Analysis · OSR Deopt</span>
     <span class="tag">Speedup Empiris: 4.5× – 7.14×</span>
   </div>
-  
+
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <!--  PIPELINE UTAMA                                                 -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -325,15 +464,15 @@
           Fungsi <code>IMPURE / I/O</code> → dialirkan langsung ke OS, tidak pernah disentuh.
         </div>
         <div class="comp comp-blue">
-          <b>Hardware PMU Sampling (&lt;1% Overhead)</b>
-          Interupsi timer prosesor (PMU) setiap 10 ms mengambil sampel Stack Frame.
-          Setelah ribuan sampel, Hot Paths terpetakan dengan akurasi &gt;95%.
+          <b>PMU Sampling &amp; PEP 669 sys.monitoring</b>
+          Interupsi timer prosesor (PMU) tiap 10ms + <i>Python 3.12+ sys.monitoring</i>.
+          Memetakan <i>Hot Paths</i> secara statistik murni tanpa membekukan UI (&lt;1% overhead).
         </div>
       </div>
     </div>
-    
+
     <div class="connector">▼</div>
-    
+
     <!-- STAGE 2: SPECIALIZER -->
     <div class="stage s2">
       <div class="stage-num">2</div>
@@ -360,9 +499,9 @@
         </div>
       </div>
     </div>
-    
+
     <div class="connector">▼</div>
-    
+
     <!-- STAGE 3: EQUIVALENCE VERIFIER -->
     <div class="stage s3">
       <div class="stage-num">3</div>
@@ -390,9 +529,9 @@
         </div>
       </div>
     </div>
-    
+
     <div class="connector">▼</div>
-    
+
     <!-- STAGE 4: COOKIE CACHE -->
     <div class="cookie-stage">
       <div class="cookie-num">4</div>
@@ -408,9 +547,9 @@
         </div>
       </div>
     </div>
-    
+
     <div class="connector">▼</div>
-    
+
     <!-- STAGE 5: WARM RUN -->
     <div class="stage s5">
       <div class="stage-num">5</div>
@@ -439,7 +578,7 @@
       </div>
     </div>
   </div><!-- /pipeline -->
-  
+
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <!--  BAB 5.6 — PETA MITIGASI HAMBATAN EKSTERNALITAS                -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
@@ -457,7 +596,7 @@
         deterministik dan me-replay komputasi murni tanpa duplikasi efek samping I/O.
       </div>
     </div>
-    
+
     <div class="mitigation-card">
       <div class="m-header">
         <div class="m-num">H2</div>
@@ -471,7 +610,7 @@
         heuristik: spesialisasi hanya aktif jika penghematan siklus &gt; biaya FFI.
       </div>
     </div>
-    
+
     <div class="mitigation-card">
       <div class="m-header">
         <div class="m-num">H3</div>
@@ -485,7 +624,7 @@
         tidak merasakan kelambatan.
       </div>
     </div>
-    
+
     <div class="mitigation-card">
       <div class="m-header">
         <div class="m-num">H4</div>
@@ -499,13 +638,14 @@
         menjamin kebenaran semantik 100% mutlak.
       </div>
     </div>
-    
+
     <div class="mitigation-card spans-2">
       <div class="m-header">
         <div class="m-num">H5</div>
         <span class="m-title">Keamanan Sandbox Host &amp; Obfuscated Binaries</span>
       </div>
-      <div class="m-tool">Timing Noise Randomization · Ed25519 HMAC · Behavioral Attestation · Sober Design Boundary</div>
+      <div class="m-tool">Timing Noise Randomization · Ed25519 HMAC · Behavioral Attestation · Sober Design Boundary
+      </div>
       <div class="m-desc">
         Timing Noise Randomization (distorsi pewaktu virtual) mematikan Sandbox Evasion Timing Attacks.
         Ed25519 HMAC + <code>chmod 400</code> melindungi Cookie dari Cache Poisoning.
@@ -515,17 +655,30 @@
       </div>
     </div>
   </div><!-- /mitigations -->
-  
+
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <!--  LEGEND                                                          -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
   <div class="legend">
-    <div class="legend-item"><div class="dot dot-green"></div> Komponen Komputasi Utama</div>
-    <div class="legend-item"><div class="dot dot-orange"></div> Mekanisme Pengaman (Guard / OSR / Tier-Lowering)</div>
-    <div class="legend-item"><div class="dot dot-purple"></div> Instrumentasi Non-Invasif (eBPF / DynamoRIO / Mozilla rr)</div>
-    <div class="legend-item"><div class="dot dot-blue"></div> Sampling &amp; Keamanan (PMU / Timing Noise)</div>
-    <div class="legend-item"><div class="dot dot-teal"></div> Verifikasi &amp; Ekuivalensi</div>
-    <div class="legend-item"><div class="dot dot-red"></div> Fallback &amp; Batas Keamanan</div>
+    <div class="legend-item">
+      <div class="dot dot-green"></div> Komponen Komputasi Utama
+    </div>
+    <div class="legend-item">
+      <div class="dot dot-orange"></div> Mekanisme Pengaman (Guard / OSR / Tier-Lowering)
+    </div>
+    <div class="legend-item">
+      <div class="dot dot-purple"></div> Instrumentasi Non-Invasif (eBPF / DynamoRIO / Mozilla rr)
+    </div>
+    <div class="legend-item">
+      <div class="dot dot-blue"></div> Sampling &amp; Keamanan (PMU / Timing Noise)
+    </div>
+    <div class="legend-item">
+      <div class="dot dot-teal"></div> Verifikasi &amp; Ekuivalensi
+    </div>
+    <div class="legend-item">
+      <div class="dot dot-red"></div> Fallback &amp; Batas Keamanan
+    </div>
   </div>
 </body>
+
 </html>

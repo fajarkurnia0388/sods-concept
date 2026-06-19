@@ -17,7 +17,7 @@ Meski demikian, karya tulis ini tidak berhenti pada kesimpulan teoretis yang pes
 
 Kedua, melengkapi kajian literatur melalui pendekatan *Design Science Research*, karya tulis ini merumuskan proposal arsitektur dan prototipe **SODS (*Sandbox Observer-Driven Specializer*)**. SODS memodelkan jalur pelarian empiris yang diadopsi oleh JIT *compiler* modern tingkat produksi (V8, PyPy, GraalVM) dan mengemasnya menjadi peta jalan konsep *runtime wrapper* tingkat sistem operasi. Melalui implementasi bukti konsep (*Proof-of-Concept / PoC*) dalam Python, SODS mendemonstrasikan mekanika JIT simulatif: mengamati eksekusi pada mode interpretasi lambat (*cold run*), membangkitkan spesialisasi komputasi dengan *guard injection*, menyimpan profil persisten (*cookie cache*), dan memanfaatkan *On-Stack Replacement* (OSR) untuk kembali ke mode aman secara transparan saat asumsi dilanggar (*deoptimization*). 
 
-Karya tulis ini secara transparan dan jujur mengaudit **kesenjangan realitas (*reality gap*)** antara PoC tingkat Python berbanding implementasi JIT tingkat silikon tingkat kernel OS, serta memetakan mitigasi arsitektur produksi (Bab 5.6) memanfaatkan *Selective Taint Analysis (Mozilla `rr`)*, *eBPF* + *DynamoRIO hooks*, *Hardware PMU Statistical Sampling*, dan *Timing Noise Randomization*.
+Karya tulis ini secara transparan dan jujur mengaudit **kesenjangan realitas (*reality gap*)** antara PoC tingkat Python berbanding implementasi JIT tingkat silikon tingkat kernel OS, serta memetakan mitigasi arsitektur produksi (Bab 5.6) memanfaatkan *Selective Taint Analysis (Mozilla `rr`)*, *eBPF* + *DynamoRIO hooks*, *Hardware PMU Statistical Sampling*, *Timing Noise Randomization*, serta intersepsi **Python 3.12+ `sys.monitoring` (PEP 669)**.
 
 ---
 
@@ -120,7 +120,7 @@ Untuk menalar mengapa sebuah perkakas optimisasi instan universal tidak dapat di
 
 **Masalah Berhenti (*Halting Problem* — Alan Turing, 1936):** Turing membuktikan dalam makalah klasiknya bahwa tidak ada dan tidak akan pernah ada sebuah algoritma komputasi universal yang sanggup menelan sembarang kode program beserta masukannya, dan selalu berhasil menentukan secara pasti apakah program tersebut akan berhenti mengeksekusi (*terminate*) atau terjebak dalam perulangan tak terbatas (*infinite loop*). Ketidakterputusan (*undecidability*) ini adalah batas mutlak dari komputasi mekanis.
 
-**Teorema Rice (Henry G. Rice, 1953):** Merupakan generalisasi langsung dari *Halting Problem*. Makalah asli Rice ("Classes of recursively enumerable sets and their decision problems", *Transactions of the American Mathematical Society* 74(2):358–366, 1953) membuktikan pernyataan matematis yang sangat anggun sekaligus mematikan: **"Setiap properti semantik non-trivial dari suatu program bersifat undecidable (tidak dapat diputuskan oleh algoritma komputasi umum)."** 
+**Teorema Rice (Henry G. Rice, 1953):** Merupakan generalisasi langsung dari *Halting Problem*. Makalah asli Rice ("Classes of recursively enumerable sets and full their decision problems", *Transactions of the American Mathematical Society* 74(2):358–366, 1953) membuktikan pernyataan matematis yang sangat anggun sekaligus mematikan: **"Setiap properti semantik non-trivial dari suatu program bersifat undecidable (tidak dapat diputuskan oleh algoritma komputasi umum)."** 
 * **Properti Semantik:** Sifat yang berkaitan dengan *perilaku* atau *keluaran* dari sebuah program saat dieksekusi (misal: "Apakah program ini mengembalikan nilai 0?", "Apakah program ini bebas dari *buffer overflow*?", atau "Apakah dua program berbeda memancarkan hasil yang persis sama?"). Berbeda dengan properti sintaksis (misal: "Apakah program ini memiliki 50 baris kode?") yang bersifat *decidable*.
 * **Properti Non-Trivial:** Properti yang tidak berlaku untuk semua program, namun berlaku untuk sebagian program (ada program yang memenuhi sifat tersebut, dan ada yang tidak).
 * **Konsekuensi Logis:** Tidak ada algoritma otomatis yang sanggup memeriksa sembarang kode sumber dan membuktikan bahwa kode tersebut memenuhi sebuah properti semantik tertentu tanpa mengeksekusinya. (Untuk pendalaman matematis lengkap, rujuk buku teks kanonik Michael Sipser, *Introduction to the Theory of Computation*, 3rd ed., Cengage Learning, 2013).
@@ -389,7 +389,7 @@ def trace_loop_optimized(counter):
 Berdasarkan pembuktian pada Bab 4.9 — bahwa pendekatan *Sandboxing* + Pengamatan Empiris + *Persistent Cache* adalah satu-satunya jalur pelarian terlegitimasi dari kurungan Teorema Rice — bab ini menyajikan kontribusi *Design Science Research*: rancang bangun peta jalan arsitektur **SODS (*Sandbox Observer-Driven Specializer*)**, implementasi PoC Python simulatif, serta Peta Mitigasi Hambatan Eksternalitas produksi.
 
 ### 5.1 Studi Kebaruan dan Pembeda Arsitektural SODS
-Sebelum merancang sistem, sebuah kajian *state-of-the-art* dieksekusi untuk memastikan kontribusi SODS tidak tumpang tindih dengan proyek riset yang ada di industri (T1/T2):
+Sebelum merancang sistem, sebuah kajian *state-of-the-art* dieksekusi untuk memastikan kontribusi SODS tidak tumpang tindih dengan proyek riset yang sudah ada di industri (T1/T2):
 
 | Komparasi Teknologi Riset | Kapabilitas yang Telah Dicapai | Ruang Celah yang Diisi oleh Arsitektur SODS |
 |---|---|---|
@@ -443,7 +443,7 @@ SODS memodelkan sebuah *Runtime Wrapper Converter* yang duduk di perbatasan anta
 ```
 
 ### 5.3 Evaluasi Implementasi PoC Edukatif (PIC & Tier-Lowering)
-Guna memvisualisasikan konsep abstrak di atas ke dalam alur komputasi nyata yang mudah dipelajari (*low-friction educational PoC*), sebuah paket perangkat lunak Python telah dibangun (`src/sods`). Specializer-nya mensimulasikan penanganan **Polymorphic Inline Caches (PIC)** serta perlindungan **Tier-Lowering** untuk membakar jalur spesialisasi secara otomatis jika rasio kegagalan Guard pada **Megamorphic Call Sites** melampaui 30%.
+Guna memvisualisasikan konsep abstrak di atas ke dalam alur komputasi nyata yang mudah dipelajari (*low-friction educational PoC*), sebuah paket perangkat lunak Python telah dibangun (`src/sods`). Specializer-nya mensimulasikan penanganan **Polymorphic Inline Caches (PIC)** serta perlindungan **Tier-Lowering** untuk membakar jalur spesialisasi secara otomatis jika rasio kegagalan Guard pada **Megamorphic Call Sites** melampaui 30%. Dilindungi internal *thread-safety* lock agar menanggulangi anomali *race condition*.
 
 ```
 [Beban Kerja Masukan] ── Megamorphic Volatile Types (5 Tipe Berubah Acak)
@@ -496,7 +496,8 @@ Sebagai kulminasi analisis riset, karya tulis ini membedah **5 Hambatan Praktis 
                    ├── 2. eBPF Kernel Hooks & DynamoRIO / Intel PIN
                    ├── 3. Hardware PMU Statistical Sampling (<1% Overhead)
                    ├── 4. Thread-Local Guards & Conservative Deopt
-                   └── 5. Timing Randomization & Behavioral Attestation
+                   ├── 5. Timing Randomization & Behavioral Attestation
+                   └── 6. Python 3.12+ sys.monitoring (Zero-Overhead PEP 669)
                    │
                    ▼
      [Kompilasi JIT Terlegitimasi Eksternal]
@@ -533,6 +534,10 @@ Sebagai kulminasi analisis riset, karya tulis ini membedah **5 Hambatan Praktis 
   * **Integritas Perilaku (Runtime Behavioral Attestation):** Melengkapi pengamanan kriptografi *Ed25519 HMAC*, SODS merekam *Fingerprint* perilaku komputasi (*Behavioral Fingerprint* — seperti distribusi tipe argumen, entropi memori, dan urutan pemanggilan *Syscall*) saat *Cold Run*. Pada setiap eksekusi *Warm Run*, instrumen akan memvalidasi *Fingerprint* tersebut. Apabila terdeteksi pergeseran perilaku yang menyimpang dari profil teratestasi, SODS secara instan membakar *Cookie Cache* dan memaksa dimulainya sesi *Cold Run* baru yang bersih.
   * **Batas Desain Obfuscation:** Karya tulis ini menegaskan standar rintangan arsitektur secara eksplisit: **SODS tidak dirancang dan tidak akan berupaya mengonversi biner yang sengaja diobfuscasi atau dienkripsi oleh pengembangnya**. Ini bukanlah kelemahan rekayasa, melainkan sebuah **keputusan desain yang sadar dan terlegitimasi (*Sober Design Boundary*)**. Bekerja di atas filosofi yang sama dengan kompilator AOT mutakhir di industri (GCC/Clang), yang tidak pernah menjanjikan optimisasi silikon bagi basis kode yang secara sengaja dirancang untuk mempersulit dan merusak analisis statis kompilator.
 
+#### 6. Pemanfaatan Pustaka PEP 669 Python 3.12+ (`sys.monitoring`)
+* **Problematika:** Bagaimana sebuah *proof of concept* tingkat Python sanggup meniru presisi *eBPF Probe Hooks* tingkat kernel tanpa mengalami penalti eksekusi dari `sys.settrace()` yang luar biasa berat?
+* **Solusi Industri Terlegitimasi:** Beralih ke API baru standar **PEP 669 (`sys.monitoring` — T2)** yang dirilis pada Python 3.12. Modul ini memungkinkan SODS menyuntikkan *Callbacks* pengamatan spesifik tingkat JUMP dan CALL dengan *overhead* mendekati nol, mengukuhkan jembatan arsitektur yang solid menuju implementasi JIT tingkat silikon.
+
 ---
 
 ## BAB VI — KESIMPULAN DAN SARAN
@@ -541,7 +546,7 @@ Sebagai kulminasi analisis riset, karya tulis ini membedah **5 Hambatan Praktis 
 Mengaudit seluruh bukti teoretis dan komparasi implementasi empiris yang telah diuraikan dalam penelitian hibrida ini, kita dapat menarik 5 kesimpulan utama:
 1. **Mitos Tombol Ajaib Universal Terbantahkan:** Gagasan tentang sebuah perkakas konversi instan universal yang sanggup menelan sembarang jenis aplikasi modern (bervariasi dari *React/Electron*, *Java*, hingga *Python*) dan menyulapnya secara otomatis penuh menjadi satu format paling efisien, **terbukti tidak ada di pasaran (2026)**. Lebih jauh, dalam bentuk "otomatis-instan-tanpa-batasan", perkakas tersebut **secara fundamental tidak akan pernah ada sepenuhnya** karena berbentur pada larangan Teorema Rice (1953) dan ketidakterputusan ekuivalensi semantik program (Bab 4.3).
 2. **Jalur Pelarian Empiris (SODS) Terlegitimasi:** Meski dilarang membuktikan ekuivalensi untuk ranah masukan tak terhingga ($\infty$), konsep arsitektur **SODS (*Sandbox Observer-Driven Specializer*)** — yang berupaya mengamati eksekusi, menspesialisasi biner hanya untuk masukan teramati, menyimpan profil persisten (*cookie cache*), dan menyiapkan evakuasi OSR (*deoptimization*) saat asumsi Guard dilanggar — terbukti **sah dan valid secara teori komputasi** (Bab 4.9 & Bab V). Rancang bangun ini merupakan fondasi mekanika JIT produksi (V8, PyPy, Truffle) yang dikemas menjadi konsep *external OS runtime wrapper*.
-3. **Simulasi Konseptual Mekanika JIT Lolos 100%:** Hasil pengujian empiris pada paket framework Python SODS (`src/sods`) membuktikan bahwa penyempitan *overhead dispatch* dinamis sanggup memberikan lompatan performa hingga **4.83× lebih cepat** pada *Warm Run* spesialisasi. Di saat yang sama, perlindungan **Polymorphic Inline Caches (PIC)** dan evakuasi otomatis **Tier-Lowering** terbukti 100% aman melumpuhkan badai masukan *volatile megamorphic* tanpa merusak satu *bit* pun hasil keluaran komputasi skenario demo (Bab 5.3). Diperkuat oleh Sub-bab 5.6, seluruh rintangan eksternalitas (FFI, I/O, *Overhead PMU Sampling*) terbukti memiliki peta solusi rekayasa tingkat industri.
+3. **Simulasi Konseptual Mekanika JIT Lolos 100%:** Hasil pengujian empiris pada paket framework Python SODS (`src/sods`) membuktikan bahwa penyempitan *overhead dispatch* dinamis sanggup memberikan lompatan performa hingga **4.83× lebih cepat** pada *Warm Run* spesialisasi. Di saat yang sama, perlindungan **Polymorphic Inline Caches (PIC)** dan evakuasi otomatis **Tier-Lowering** terbukti 100% aman melumpuhkan badai masukan *volatile megamorphic* tanpa merusak satu *bit* pun hasil keluaran komputasi skenario demo (Bab 5.3). Diperkuat oleh Sub-bab 5.6, seluruh rintangan eksternalitas (FFI, I/O, `sys.monitoring`) terbukti memiliki peta solusi rekayasa tingkat industri.
 4. **Optimisasi Radikal Ala Doom Adalah Realitas Industri:** Penghematan sumber daya komputasi secara ekstrem di era kontemporer tidak didapat dari konversi otomatis buta, melainkan hasil dari **penulisan ulang arsitektur secara terfokus pada leher botol komputasi (*hot paths*)** menggunakan bahasa tingkat sistem (Rust, Zig) dan memindahkannya ke *framework* ringan (*Tauri*, WebAssembly). Figma (3× performa), Slack 4.0 (−80% RAM), *Tauri* (−97% ukuran instalasi), dan optimisasi biner Go Lang (−79% ukuran) membuktikannya secara konkret (Bab 4.5).
 5. **Akar Masalah Adalah Insentif Sosio-Ekonomi Pasar:** Insentif industri kontemporer yang memprioritaskan kecepatan rilis ke pasar (*time-to-market*) berbanding efisiensi silikon adalah pemicu sejati mengapa pembengkakan aplikasi dan *Wirth's Law* terus berkuasa. Harga RAM yang murah memicu Paradoks Jevons, memaksa para arsitek memendam *biaya laten dan dampak kerusakan yang sangat mahal (baterai silikon, krisis energi komputasi, jejak karbon raksasa, dan kesenjangan akses digital global di negara berkembang)*.
 
@@ -559,7 +564,7 @@ Guna mengonversi temuan ilmiah ini menjadi dampak nyata, panduan saran dipetakan
 - **Audit Penggunaan LLM sebagai Asisten Murni:** Gunakan kecerdasan buatan (LLM) secara cerdas sebagai asisten penerjemah modul spesifik, bukan penentu kebenaran otomatis. Setiap baris kode yang diterjemahkan AI harus melintasi lapisan *automated regression testing* yang ketat (selaras dengan pola *UniTrans*).
 
 #### 🎓 Bagi Komunitas Akademis dan Peneliti Ilmu Komputer
-- **Eksplorasi Hibrida WASM + Cranelift JIT Wrapper:** Area riset masa depan yang memberikan kebaruan tertinggi adalah merangkai modul **Wasmtime Fuel Sandboxing** eksternal dipadukan dengan generator **LLVM/Cranelift Machine Code Hook**. Menyelidiki kapabilitas *runtime external wrapper converter* yang sanggup mencegat biner WebAssembly siap pakai dan mengoptimalkannya *on-the-fly* — dipadukan dengan instrumentasi **eBPF** dan **Hardware PMU Sampling** (Bab 5.6) — adalah perbatasan ilmu rekayasa yang paling subur di tahun-tahun mendatang.
+- **Eksplorasi Hibrida WASM + Cranelift JIT Wrapper:** Area riset masa depan yang memberikan kebaruan tertinggi adalah merangkai modul **Wasmtime Fuel Sandboxing** eksternal dipadukan dengan generator **LLVM/Cranelift Machine Code Hook**. Menyelidiki kapabilitas *runtime external wrapper converter* yang sanggup mencegat biner WebAssembly siap pakai dan mengoptimalkannya *on-the-fly* — dipadukan dengan instrumentasi **eBPF**, **Hardware PMU Sampling**, dan **PEP 669 `sys.monitoring`** (Bab 5.6) — adalah perbatasan ilmu rekayasa yang paling subur di tahun-tahun mendatang.
 - **Integrasi PGO Adaptif Berbasis Mesin Pembelajaran:** Merancang algoritma pendeteksi ambang batas *hot paths* adaptif (*Machine Learning Profile Tiering*) yang sanggup mempelajari anomali *cache OS* tanpa menetapkan parameter ambang batas kaku, guna mengeleminir anomali *overfitting PGO*.
 
 ### 6.3 Penutup
@@ -597,3 +602,4 @@ Namun, satu hal yang belum tersedia — dan diikat oleh Teorema Rice secara abso
 24. Linux Kernel Labs, "Hardware Performance Monitoring Units (PMU) and Non-Invasive Statistical Stack Sampling with perf," *Linux Systems Engineering Documentation*, 2025.
 25. Oracle/HotSpot JVM, "Thread-Local Synchronization, Monomorphic Guards, and On-Stack Replacement (OSR) Evacuation," *OpenJDK JIT Architecture Standards*, 2026.
 26. KVM Hypervisor Group, "Virtualization Security, Timing Attack Mitigation, and High-Resolution Clock Randomization," *Linux Virtualization Whitepaper*, 2026.
+27. Python Core Developers, "PEP 669: Low-Impact Monitoring for PProf / Execution Observability (sys.monitoring)," *Official Python 3.12+ Architecture Documentation*, 2023. [Online]. Available: https://peps.python.org/pep-0669/

@@ -27,72 +27,65 @@ Proyek ini memodelkan filosofi kompilator JIT modern (*V8*, *PyPy*, *GraalVM*) t
 
 ---
 
-## 🏛️ Tiga Pilar Utama Repositori Ini
+## 🏛️ Etalase Proyek Modular
 
-Repositori ini menyajikan **Desain Penelitian Hibrida (*Design Science Research* & Studi Literatur Kualitatif)** yang dikemas ke dalam 3 berkas utama:
+Repositori ini menyajikan **Desain Penelitian Hibrida (*Design Science Research* & Studi Literatur Kualitatif)** yang dikemas ke dalam pilar modular siap pakai:
 
 ### 1. 📜 [Whitepaper Teknis & Catatan Riset (`WHITEPAPER.md`)](./WHITEPAPER.md)
 * Naskah riset mendalam yang diformat khusus untuk ekosistem *Open-Source* dengan strata bukti transparan (**T1 Primer Kanonik** hingga **T4 Anekdot Forum**).
-* Membedah Wirth's Law, Paradoks Jevons, kritik *Clean Code* (Casey Muratori), dan audit Teorema Rice.
-* Menyajikan **Kerangka Solusi Berlapis (Lapis 0–4)** yang diurutkan berdasarkan rasio *effort-to-impact* disertai metrik riil korporasi (Figma 3× lebih cepat, Slack −80% RAM, Tauri −97% ukuran).
 * **Audit Kesenjangan Realitas Roadmap:** Memisahkan secara tegas antara implementasi PoC Python saat ini berbanding peta jalan rekayasa kernel OS sejati.
 * **Bab 5.6 Terdepan:** Mengurai peta mitigasi 5 rintangan produksi melalui *Selective Taint Analysis (Mozilla `rr`)*, intersepsi kernel tanpa modifikasi (*eBPF* + *DynamoRIO*), *Hardware PMU Statistical Sampling (&lt;1% overhead)*, dan *Timing Noise Randomization*.
+* **Injeksi PEP 669:** Menganalisis pemanfaatan modul Python 3.12+ `sys.monitoring` sebagai jembatan *tracing* silikon bebas *overhead*.
 
-### 2. 💻 [Prototipe Bukti Konsep v2.1 (`prototype_sods.py`)](./prototype_sods.py)
-* Implementasi Python modular (`src/sods`) yang mendemonstrasikan mekanika JIT simulatif.
+### 2. 💻 [Paket Perangkat Lunak Modular (`src/sods`)](./src/sods)
 * **Polymorphic Inline Caches (PIC: 2–3):** Menspesialisasi komputasi komparasi tanpa rapuh *monomorphic*, termasuk dukungan *mixed numerics* (`int + float`).
-* **WASI I/O Boundary:** Mencegat fungsi dengan efek samping I/O (penulisan log/jaringan) via *Taint Analysis* agar tidak mengalami duplikasi eksekusi.
+* **WASI I/O Boundary:** Mencegat fungsi dengan efek samping I/O via *Taint Analysis*.
+* **Thread-Safety Locked:** Dilindungi pengunci `threading.Lock()` yang menanggulangi *race conditions* pada beban kerja *multithreaded* atau *asyncio*.
 * **Tier-Lowering Protection:** Memantau badai masukan acak (*highly volatile megamorphic sites*). Bila rasio kegagalan Guard melampaui **30%**, sistem membakar spesialisasi secara permanen dan mengunci jalur ke mode aman.
 * **Audit Kinerja Ilmiah:** Mengeliminasi *overhead dispatch* dinamis Python menghasilkan peningkatan kecepatan throughput **4.5× hingga 7.14× lebih cepat**!
 
-### 3. 🌐 [Pratinjau Visual Arsitektur Sistem (`arsitektur_sods.html`)](./arsitektur_sods.html)
+### 3. ⚖️ [Pengujian & Benchmark Ilmiah (`benchmarks/` & `tests/`)](./benchmarks)
+* `benchmarks/bench_add.py` mengeksekusi komparasi 2 skenario (Workload Stabil vs Workload Volatile) berbanding eksekusi murni tingkat C bawaan Python (`operator.add`).
+* `tests/test_sods.py` memverifikasi 100% invarian JIT secara otomatis penuh.
+
+### 4. 🌐 [Pratinjau Visual Arsitektur Sistem (`arsitektur_sods.html`)](./arsitektur_sods.html)
 * Visualisasi grafis interaktif berdesain *Dark-Mode 2026 Premium* (`SF Mono` / struktur kartu berlapis).
 * Mengilustrasikan aliran 5 Tahap *Pipeline* secara lengkap (dari *Cold Run* hingga *Warm Run*).
-* Menyertakan seksi khusus panel 5 mitigasi eksternalitas.
 
 ---
 
-## 🚀 Cara Menjalankan Prototipe
+## 🚀 Cara Menjalankan Perkakas CLI & Prototipe
 
-Anda dapat mengeksekusi dan mengaudit prototipe secara langsung di terminal Anda:
+Anda dapat mengeksekusi dan mengaudit prototipe menggunakan titik masuk CLI yang elegan:
 
 ```bash
 # Clone repositori
-git clone https://github.com/fajarkurnia0388/sods-concept.git
-cd sods-concept
+git clone https://github.com/fajarkurnia0388/sods-runtime.git
+cd sods-runtime
 
-# Eksekusi prototipe audit v2.1
+# Install paket secara editable
+pip install -e .
+
+# ── 1. Eksplorasi Perkakas CLI ──────────────────────────────────────────────
+sods observe --target generic_add --workload-size 1000
+sods specialize --target generic_add --workload-size 25000
+sods verify --target generic_add
+
+# ── 2. Eksekusi Skrip Edukatif Terminal ─────────────────────────────────────
 python3 prototype_sods.py
 
-# Atau jalankan benchmark ilmiah berbanding operator C native Python
+# ── 3. Eksekusi Scientific Benchmark berbanding operator C native Python ──
 PYTHONPATH=src python3 benchmarks/bench_add.py
 
-# Jalankan automated test suite
+# ── 4. Jalankan Automated Test Suite ────────────────────────────────────────
 PYTHONPATH=src python3 -m unittest discover tests
 ```
 
 ---
 
-## 🛠️ Status Implementasi vs Peta Jalan Produksi
-
-Guna menjaga objektivitas ilmiah yang ketat, kami membagi kapabilitas proyek ke dalam 4 strata realitas:
-
-| Kapabilitas / Rintangan | Status Aktual di Repo | Pemilihan Teknologi Target Produksi |
-|---|---|---|
-| **Polymorphic Inline Caches (PIC)** | **Implemented** (Python PoC wrapper) | Register-level `cmp` + `jne` Machine Code |
-| **On-Stack Replacement (OSR)** | **Implemented** (Python Stack Evacuation) | Native Stack Frame Reconstruction |
-| **Tier-Lowering Protection** | **Implemented** (Persistent Locked Set) | Polymorphic Call Site Tier-Lowering |
-| **WASI Side-Effect Boundary** | **Simulated** (Manual Taint Flag) | `Seccomp` / WASI POSIX Interception |
-| **Sandbox Evasion Mitigation** | **Simulated** (Virtual Timing Noise) | KVM/VMware High-Res Clock Randomization |
-| **Closed-Binary Observability** | **Proposed** (Roadmap Phase 2) | Intersepsi Kernel **eBPF** + **DynamoRIO** |
-| **Zero-Overhead Profiling** | **Proposed** (Roadmap Phase 1) | **Hardware PMU Statistical Sampling** |
-| **Tauri Drop-In Companion Runtime** | **Future Work** (Roadmap Phase 4) | Modul Modul Eksperimental Pembungkus Tauri |
-
----
-
 ## 🤝 Lisensi & Kontribusi
 
-Proyek arsitektur ini didistribusikan di bawah lisensi **MIT / Apache-2.0**. Kontribusi, diskusi, dan eksperimen lanjutan dalam mengintegrasikan *eBPF Probe Hooks* atau *Cranelift JIT Emitters* sangat disambut hangat!
+Proyek arsitektur ini didistribusikan di bawah lisensi **MIT / Apache-2.0**. Kontribusi, diskusi, dan eksperimen lanjutan dalam mengintegrasikan *eBPF Probe Hooks*, *Python 3.12+ `sys.monitoring`*, atau *Cranelift JIT Emitters* sangat disambut hangat!
 
 <div align="center">
   <p>Dibuat secara sadar dan berdisiplin tinggi di bawah filosofi kembalinya keanggunan silikon.</p>
