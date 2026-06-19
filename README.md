@@ -26,7 +26,7 @@
 
 SODS bertolak dari sebuah pertanyaan teoretis mendasar: _"Apabila Teorema Rice (1953) secara matematis melarang kita membuat alat konversi universal yang dijamin 100% ekuivalen untuk seluruh masukan tak terhingga ($\infty$), bagaimana jika kita membangun runtime yang mengamati perilaku eksekusi, menspesialisasi biner HANYA untuk masukan teramati, menyimpan profil persisten (seperti cookie), dan menyiapkan pintu darurat (OSR Deoptimization) saat asumsi dilanggar?"_
 
-Proyek ini memodelkan filosofi kompilator JIT modern (_V8_, _PyPy_, _GraalVM_) tingkat industri dan mengemasnya menjadi konsep peta jalan _external OS-level wrapper converter_.
+Proyek ini memodelkan filosofi kompilator JIT modern (_V8_, _PyPy_, _GraalVM_) serta teknik kompilasi dinamis rekayasa sistem AI kontemporer (seperti _torch.compile_ dan _Apache TVM_) tingkat industri, lalu mengemasnya menjadi konsep peta jalan _external OS-level wrapper converter_.
 
 ---
 
