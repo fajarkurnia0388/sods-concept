@@ -129,5 +129,5 @@ Guna menjaga objektivitas ilmiah yang ketat, kami membagi kapabilitas proyek ke 
 Proyek arsitektur ini didistribusikan di bawah lisensi **MIT / Apache-2.0**. Kontribusi, diskusi, dan eksperimen lanjutan dalam mengintegrasikan *eBPF Probe Hooks*, *Python 3.12+ `sys.monitoring`*, atau *Cranelift JIT Emitters* sangat disambut hangat!
 
 <div align="center">
-  <p>Dibuat secara sadar dan berdisiplin tinggi di bawah filosofi kembalinya keanggunan silikon.</p>
+  <p>Dibuat secara sadar dan berdisiplin tinggi di bawah filosofi kembalinya keanggunan komputasi.</p>
 </div>
