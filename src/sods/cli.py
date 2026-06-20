@@ -12,7 +12,23 @@ import os
 from sods import SODSSandbox, EquivalenceVerifier
 from sods.dummy_target import generic_add, generic_log_io
 
+if sys.stdout and hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
 def main():
+    if len(sys.argv) == 2 and sys.argv[1] in ('-h', '--help'):
+        parser = argparse.ArgumentParser(
+            description="⚙️ SODS CLI — Educational PoC for Observer-Driven Runtime Specialization",
+            formatter_class=argparse.RawTextHelpFormatter
+        )
+        subparsers = parser.add_subparsers(dest="command", help="Available execution workflows")
+        subparsers.add_parser("observe", help="Run application workload in Cold Run mode to record PIC call profiles")
+        subparsers.add_parser("specialize", help="Reconstitute profile JSON and execute warm run fast paths")
+        subparsers.add_parser("verify", help="Run empirical equivalence verifier on bounded target domain inputs")
+        subparsers.add_parser("bench", help="Run rigorous scientific benchmarks (Skenario A & B)")
+        parser.parse_args(['--help'])
+        return
+
     parser = argparse.ArgumentParser(
         description="⚙️ SODS CLI — Educational PoC for Observer-Driven Runtime Specialization",
         formatter_class=argparse.RawTextHelpFormatter

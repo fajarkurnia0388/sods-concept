@@ -1,8 +1,24 @@
 """
 PROTOTYPE: Sandbox Observer-Driven Specializer (SODS)
 ======================================================
-Versi 2.3 (Penyempurnaan Final — Produksi-Kritis)
+Versi 2.4 (Penyempurnaan Final — Produksi-Kritis)
 --------------------------------------------------
+
+⚠️  HISTORICAL NOTE (2026-06-20):
+    Speedup claims of "4.5× – 7.14×" in earlier versions of this
+    standalone prototype were measured against an intentionally
+    slowed-down generic_add baseline on specific Windows/Python
+    environments, without comparison to native operator.add.
+
+    Reproducible benchmark in `benchmarks/bench_add.py`
+    (CPython 3.10–3.13, Linux x86_64) shows:
+      • Stable workload: 3.1× – 3.3× vs generic_add
+      • vs operator.add native: 0.23× – 0.24× (4.2× – 4.3× slower)
+      • Volatile workload: 0.47× – 0.69× (Guard thrashing)
+
+    See README.md / ROADMAP_STATUS.md for honest numbers.
+    This prototype file is kept for educational / historical
+    reference — for rigorous benchmarking use `benchmarks/bench_add.py`.
 Catatan Perubahan v2.0 → v2.1:
   [FIX] Blok kesimpulan akhir kini mengacu ke variabel `speedup` yang
         dihitung dinamis saat runtime, bukan nilai hardcode "7.14×".
@@ -527,9 +543,9 @@ def main():
     print(f"  │ SPEEDUP               : {speedup:>8.2f}× lebih cepat     │")
     print(f"  └─────────────────────────────────────────────────────┘")
     speedup_min = min(3.1, speedup)
-    speedup_max = max(3.25, speedup)
+    speedup_max = max(3.3, speedup)
     print(f"\n  >>> PENCAPAIAN SPEEDUP: {speedup:.2f}× LEBIH CEPAT!")
-    print(f"      (Rentang empiris: {speedup_min:.2f}× – {speedup_max:.2f}× vs generic bergantung kondisi OS & Python runtime)")
+    print(f"      (Rentang empiris historis: 4.5× – 7.14× | Terukur saat ini: 3.1× – 3.3× vs generic / 0.23× – 0.24× vs native — lihat benchmarks/bench_add.py)")
 
     # ─────────────────────────────────────────────────────────────────────────
     # TAHAP 4: UJI PERBATASAN I/O — WASI Syscall Intersepsi (Taint Analysis)
@@ -605,7 +621,8 @@ def main():
   │ 6  │ Equivalence Verifier (Akali Rice)     │ ✓ TERBUKTI       │
   ├────┼───────────────────────────────────────┼──────────────────┤
   │ ★  │ Speedup Komputasi ({speedup:.2f}× sesi ini)    │ {speedup:.2f}× LEBIH CEPAT │
-  │    │ Rentang Empiris Tercatat              │ {speedup_min:.2f}× – {speedup_max:.2f}×     │
+  │    │ Rentang Empiris Tercatat              │ 3.1× – 3.3× (vs generic) │
+  │    │                                       │ 0.23× – 0.24× (vs native)│
   └────┴───────────────────────────────────────┴──────────────────┘
 
   Seluruh rintangan industri (PIC, WASI, OSR, Tier-Lowering) terbukti

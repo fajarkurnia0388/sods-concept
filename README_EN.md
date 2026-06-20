@@ -94,7 +94,7 @@ This repository presents a **Hybrid Research Design (*Design Science Research* &
 ### 3. ⚖️ [Scientific Benchmarks & Tests (`benchmarks/` & `tests/`)](./benchmarks)
 
 - `benchmarks/bench_add.py` runs comparative benchmarks across 2 scenarios (Stable vs. Volatile Workloads) against Python's native C implementation (`operator.add`).
-- `tests/test_sods.py` verifies 7/7 JIT invariants automatically (PIC, Guard deopt, Tier-Lowering, WASI taint, cookie HMAC).
+- `tests/test_sods.py` verifies 9/9 JIT invariants automatically (PIC, Guard deopt, Tier-Lowering, WASI taint, cookie HMAC, thread-safety, guard thrashing stress) and ensures zero modification of Python user code.
 
 ### 4. 🌐 [Visual Architecture Preview (`index.html`)](https://fajarkurnia0388.github.io/sods-runtime/)
 
