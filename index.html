@@ -699,8 +699,7 @@
     <section class="hero">
         <h1>Mengatasi Software Bloat Lewat Pengamatan Runtime</h1>
         <p class="sub-hero">
-            Sebuah Kajian Hibrida <i>Design Science Research</i> tingkat sistem operasi untuk mengakali batasan absolut
-            Teorema Rice secara empiris.
+            <b>Apa itu SODS?</b> SODS adalah sebuah <i>runtime engine</i> eksperimental yang bekerja di belakang layar untuk mengamati aplikasi yang sedang berjalan. Ia secara otomatis mendeteksi jalur kode yang lambat dan menyulapnya menjadi instruksi yang jauh lebih cepat tanpa perlu memodifikasi kode aslinya. Tujuannya? Membuat aplikasi modern yang boros RAM bisa kembali berjalan sekencang dan seringan perangkat lunak klasik masa lalu.
         </p>
 
         <div class="hero-badges">
@@ -792,6 +791,22 @@
 
         <!-- ── Seksi 1: Arsitektur 5 Tahap ──────────────────────────────── -->
         <h2 class="section-title">Alur Kerja 5 Tahap Pipeline SODS Produksi</h2>
+
+        <div style="background: rgba(31, 111, 235, 0.1); border: 1px solid #1f6feb; border-radius: 12px; padding: 20px 24px; margin-bottom: 32px;">
+            <h3 style="color: #58a6ff; font-size: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                <span>💡</span> Penjelasan Sederhana (Analogi Jalan Tol)
+            </h3>
+            <p style="font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+                Bayangkan program yang lambat adalah <b>sebuah persimpangan kota yang sangat macet</b> karena semua mobil harus menanyakan arah. Berikut cara SODS menyelesaikannya:
+            </p>
+            <ul style="font-size: 13.5px; color: var(--text-main); line-height: 1.6; padding-left: 20px; display: flex; flex-direction: column; gap: 8px;">
+                <li><b>Tahap 1 (Observasi):</b> Polisi diam-diam mengamati bahwa 90% mobil tujuannya cuma satu arah (misal ke Jakarta).</li>
+                <li><b>Tahap 2 (Membangun Jalan Pintas):</b> Pemerintah seketika membangun "Jalan Layang Tol Khusus" langsung ke Jakarta, memotong semua lampu merah.</li>
+                <li><b>Tahap 3 (Uji Coba Keamanan):</b> Mobil <i>dummy</i> dites masuk jalan tol untuk memastikan mereka benar-benar mendarat di gedung tujuan yang sama tanpa tersasar.</li>
+                <li><b>Tahap 4 (Menyimpan Peta):</b> Rute tol baru ini disimpan ke dalam memori komputer secara permanen agar besok bisa langsung dipakai.</li>
+                <li><b>Tahap 5 (Penjaga Gerbang Tol):</b> Tol resmi dibuka, mobil melaju 7× lebih cepat! Namun di gerbang ada penjaga (<i>Guard</i>). Jika ada mobil aneh yang mau ke Bandung, penjaga akan dengan aman membelokkannya ke jalan bawah yang biasa agar tidak terjadi kecelakaan.</li>
+            </ul>
+        </div>
 
         <div class="pipeline">
             <!-- TAHAP 1 -->
