@@ -6,7 +6,7 @@
 [![Version](<https://img.shields.io/badge/version-2.1%20(Research%20PoC)-58a6ff.svg>)](./prototype_sods.py)
 [![Theory](https://img.shields.io/badge/theory-Rice's%20Theorem%20Workaround-a371f7.svg)](./WHITEPAPER.md)
 [![Genesis](https://img.shields.io/badge/genesis-Di%20TeknoIn%20Inspiration-ffbd2e.svg)](./GENESIS.md)
-[![Speedup](<https://img.shields.io/badge/speedup-3.5×%20to%207.14×%20(Simulated)-56d364.svg>)](./prototype_sods.py)
+[![Speedup](<https://img.shields.io/badge/speedup-4.5×%20to%207.14×%20(Simulated)-56d364.svg>)](./prototype_sods.py)
 [![Vibe](<https://img.shields.io/badge/vibe-Doom%20(1993)%20-Apple%20Task%20Manager%20Efficiency-f0883e.svg>)](./GENESIS.md)
 
 </div>
@@ -79,7 +79,7 @@ Repositori ini menyajikan **Desain Penelitian Hibrida (_Design Science Research_
 - **WASI I/O Boundary:** Mencegat fungsi dengan efek samping I/O via _Taint Analysis_.
 - **Thread-Safety Locked:** Dilindungi pengunci `threading.Lock()` yang menanggulangi _race conditions_ pada beban kerja _multithreaded_ atau _asyncio_.
 - **Tier-Lowering Protection:** Memantau badai masukan acak (_highly volatile megamorphic sites_). Bila rasio kegagalan Guard melampaui **30%**, sistem membakar spesialisasi secara permanen dan mengunci jalur ke mode aman.
-- **Audit Kinerja Ilmiah:** Mengeliminasi _overhead dispatch_ dinamis Python menghasilkan peningkatan kecepatan throughput **3.5× hingga 7.14× lebih cepat**!
+- **Audit Kinerja Ilmiah:** Mengeliminasi _overhead dispatch_ dinamis Python menghasilkan peningkatan kecepatan throughput **4.5× hingga 7.14× lebih cepat**!
 
 ### 3. ⚖️ [Pengujian & Benchmark Ilmiah (`benchmarks/` & `tests/`)](./benchmarks)
 

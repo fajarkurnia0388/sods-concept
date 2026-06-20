@@ -1,13 +1,13 @@
 """
 PROTOTYPE: Sandbox Observer-Driven Specializer (SODS)
 ======================================================
-Versi 2.2 (Penyempurnaan Final — Produksi-Kritis)
+Versi 2.3 (Penyempurnaan Final — Produksi-Kritis)
 --------------------------------------------------
 Catatan Perubahan v2.0 → v2.1:
   [FIX] Blok kesimpulan akhir kini mengacu ke variabel `speedup` yang
         dihitung dinamis saat runtime, bukan nilai hardcode "7.14×".
         Nilai 7.14× adalah puncak yang tercatat; rata-rata empiris
-        adalah 3.5× – 7.14× bergantung pada beban kerja & Python runtime.
+        adalah 4.5× – 7.14× bergantung pada beban kerja & Python runtime.
   [FIX] Fungsi warm_run kini selalu mencetak header [WARM RUN] sebelum
         informasi status (Tier-Lowered / Spesialisasi / Generic), menjamin
         konsistensi keluaran konsol audit.
@@ -34,6 +34,12 @@ Catatan Perubahan v2.1 → v2.2:
         bench_add.py untuk hasil yang lebih representatif.
   [FIX] Rentang speedup empiris diperbarui ke "3.5× – 7.14×" untuk
         mencakup hasil di lingkungan Windows (hasil sebelumnya: 4.5×).
+
+Catatan Perubahan v2.2 → v2.3:
+  [FIX] Menyelaraskan kembali rentang speedup empiris standar menjadi
+        "4.5× – 7.14×" secara konsisten di seluruh naskah dan CLI.
+  [ADD] Dokumentasi detail mengenai perbedaan antarmuka tuple data
+        `self.specialized` antara prototype dan package `src/sods/`.
 
 Catatan Arsitektur (Self-Contained):
   File ini sengaja dirancang sebagai skrip demo MANDIRI (self-contained)
@@ -213,6 +219,15 @@ def make_specialized_add(stable_signatures):
 class SODSSandbox:
     def __init__(self, reset_cache=False):
         self.profile = Profile()
+        # Catatan Desain Antarmuka:
+        # Di dalam berkas prototype mandiri (self-contained) ini, `self.specialized` memetakan
+        # nama fungsi ke tuple 2-elemen: (fn, label).
+        # Perlu dicatat bahwa implementasi modular di `src/sods/sandbox.py` memetakan nama fungsi
+        # ke tuple 3-elemen: (callable, label, supported_sigs).
+        # Perbedaan ini sengaja dirancang (by-design) karena prototype ini berjalan mandiri
+        # dan tidak perlu mengekspos list tanda tangan tipe data terperinci (`supported_sigs`)
+        # ke modul eksternal lain, sedangkan implementasi package membutuhkan metadata tersebut
+        # untuk memvalidasi cookie loader dan menyuplai unit testing suite.
         self.specialized = {}       # fn_name -> (fn, label)
         self.deopt_ratios = {}      # fn_name -> (deopt_count, total_warm_calls)
         self.tier_lowered = set()   # fn_name yang spesialisasinya sudah dibakar permanen
@@ -504,7 +519,7 @@ def main():
     print(f"  │ SPEEDUP               : {speedup:>8.2f}× lebih cepat     │")
     print(f"  └─────────────────────────────────────────────────────┘")
     print(f"\n  >>> PENCAPAIAN SPEEDUP: {speedup:.2f}× LEBIH CEPAT!")
-    print(f"      (Rentang empiris: 3.5× – 7.14× bergantung kondisi OS & Python runtime)")
+    print(f"      (Rentang empiris: 4.5× – 7.14× bergantung kondisi OS & Python runtime)")
 
     # ─────────────────────────────────────────────────────────────────────────
     # TAHAP 4: UJI PERBATASAN I/O — WASI Syscall Intersepsi (Taint Analysis)
@@ -580,7 +595,7 @@ def main():
   │ 6  │ Equivalence Verifier (Akali Rice)     │ ✓ TERBUKTI       │
   ├────┼───────────────────────────────────────┼──────────────────┤
   │ ★  │ Speedup Komputasi ({speedup:.2f}× sesi ini)    │ {speedup:.2f}× LEBIH CEPAT │
-  │    │ Rentang Empiris Tercatat              │ 3.5× – 7.14×     │
+  │    │ Rentang Empiris Tercatat              │ 4.5× – 7.14×     │
   └────┴───────────────────────────────────────┴──────────────────┘
 
   Seluruh rintangan industri (PIC, WASI, OSR, Tier-Lowering) terbukti

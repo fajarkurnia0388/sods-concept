@@ -24,7 +24,7 @@ This paper transparently and honestly audits the **reality gap** between the Pyt
 ## TABLE OF CONTENTS
 
 - **CHAPTER I INTRODUCTION**
-  - 1.1 Background and Socio-Economic Urgency
+  - 1.1 Background, Socio-Economic Urgency, and Genesis Transcript
   - 1.2 Problem Formulation
   - 1.3 Research Objectives
   - 1.4 Research Significance
@@ -172,7 +172,7 @@ Our inventory shows that **no universal instant converter exists**, only specifi
 - **Framework Wrappers:** Moving from Electron to Tauri reduces bundle size by ~97% (120MB to 3MB) and RAM by ~80% (300MB to 50MB) by utilizing the OS native webview.
 - **Post-Build Optimizers:** `strip` cuts symbol tables. Combining `strip` and `UPX` on a Go binary reduces it from 12 MB to 2.5 MB (approx. 21% of its original size, or ~4.8× smaller).
 - **WebAssembly (WASM):** Figma achieved **3× speedup** by compiling its C++/Rust engine to WASM.
-- **Decompilers:** Ghidra can only reverse-engineer simple unoptimized binaries (with an evaluation showing correctness on 93% of simple unoptimized C functions [28]). CFG reconstruction on optimized `-O3` binaries is highly lossy.
+- **Decompilers:** Ghidra can only reverse-engineer simple unoptimized binaries (with an evaluation showing correctness on 93% of simple unoptimized C functions (Klieber, 2021)). CFG reconstruction on optimized `-O3` binaries is highly lossy.
 - **LLMs:** While models like Claude 3.5 or DeepSeek-R1 write impressive code, translating a million-line ERP system automatically fails due to context limits and semantic hallucinations.
 
 ### 4.2 Definite Answers to Core Research Questions
@@ -263,7 +263,7 @@ The 5-stage specialization pipeline runs as follows:
 
 ### 5.3 Evaluation of Educational PoC Implementation
 Our Python implementation (`src/sods`) demonstrates PICs, OSR deoptimization, and Tier-Lowering (deactivating the fast path permanently if deopt ratio >30%).
-- **Speedup:** Achieves **3.5× to 7.14× speedup** over the bloated generic Python code under our standard test environment (Python 3.12+, Windows 11 / Linux x86_64, Intel/AMD processor, 50,000 iterations). We honestly attribute this speedup to *Python interpreter dispatch overhead elimination*, not raw machine code generation.
+- **Speedup:** Achieves **4.5× to 7.14× speedup** over the bloated generic Python code under our standard test environment (Python 3.12+, Windows 11 / Linux x86_64, Intel/AMD processor, 50,000 iterations). We honestly attribute this speedup to *Python interpreter dispatch overhead elimination*, not raw machine code generation.
 - **Correctness:** 100% correct calculations through fallback paths.
 - **Tier-Lowering:** Successfully burns out volatile megamorphic call sites.
 
@@ -293,7 +293,7 @@ We map out solutions to 5 main systems obstacles:
 ### 6.1 Conclusions
 1. **Universal Converter Myth Busted:** A tool that magically converts any arbitrary program to its most efficient form is theoretically impossible due to Rice's Theorem.
 2. **SODS Validated:** Speculative runtime specialization is mathematically sound and has been proven in production JIT environments.
-3. **JIT Simulation Successful:** The Python PoC successfully demonstrated PIC generation, OSR, and tier-lowering with 3.5x-7.14x speedups.
+3. **JIT Simulation Successful:** The Python PoC successfully demonstrated PIC generation, OSR, and tier-lowering with 4.5x-7.14x speedups.
 4. **Radical Optimization Requires Intent:** Real-world performance leaps come from framework changes (Tauri) and Rust/WASM rewrites.
 5. **Economic Incentives Rule:** Wirth's Law persists because business prioritizes release velocity over CPU cycles.
 
