@@ -6,7 +6,9 @@
 [![Version](<https://img.shields.io/badge/version-2.1%20(Research%20PoC)-58a6ff.svg>)](./prototype_sods.py)
 [![Theory](https://img.shields.io/badge/theory-Rice's%20Theorem%20Workaround-a371f7.svg)](./WHITEPAPER.md)
 [![Genesis](https://img.shields.io/badge/genesis-Di%20TeknoIn%20Inspiration-ffbd2e.svg)](./GENESIS.md)
-[![Speedup](<https://img.shields.io/badge/speedup-4.5×%20to%207.14×%20(Simulated)-56d364.svg>)](./prototype_sods.py)
+[![Speedup](<https://img.shields.io/badge/speedup-3.25×%20vs%20generic%20/%200.24×%20vs%20native-56d364.svg>)](./benchmarks/bench_add.py)
+[![Status](<https://img.shields.io/badge/status-Educational_PoC_Python-yellow.svg>)](#)
+[![Tests](<https://img.shields.io/badge/tests-9/9_(3.10--3.13)_passing-success.svg>)](./tests/test_sods.py)
 [![Vibe](<https://img.shields.io/badge/vibe-Doom%20(1993)%20-Apple%20Task%20Manager%20Efficiency-f0883e.svg>)](./GENESIS.md)
 
 </div>
@@ -30,6 +32,10 @@ SODS bertolak dari sebuah pertanyaan teoretis mendasar: _"Apabila Teorema Rice (
 Proyek ini memodelkan filosofi kompilator JIT modern (_V8_, _PyPy_, _GraalVM_) serta teknik kompilasi dinamis rekayasa sistem AI kontemporer (seperti _torch.compile_ dan _Apache TVM_) tingkat industri, lalu mengemasnya menjadi konsep peta jalan _external OS-level wrapper converter_.
 
 ---
+
+## ⚠️ Batasan & Disclaimer (Research PoC)
+
+Proyek ini adalah murni **Educational Python PoC** dan bukan *production runtime*. Harap lihat [ROADMAP_STATUS.md](./ROADMAP_STATUS.md) untuk melihat matriks realita mengenai kapabilitas yang sudah *Implemented*, baru *Simulated*, atau sekadar rancangan (*Proposed Roadmap*).
 
 ## 🌟 Potensi Raksasa Jika Tools SODS Kelak Dibangun (Why SODS Matters)
 
@@ -79,7 +85,7 @@ Repositori ini menyajikan **Desain Penelitian Hibrida (_Design Science Research_
 - **WASI I/O Boundary:** Mencegat fungsi dengan efek samping I/O via _Taint Analysis_.
 - **Thread-Safety Locked:** Dilindungi pengunci `threading.Lock()` yang menanggulangi _race conditions_ pada beban kerja _multithreaded_ atau _asyncio_.
 - **Tier-Lowering Protection:** Memantau badai masukan acak (_highly volatile megamorphic sites_). Bila rasio kegagalan Guard melampaui **30%**, sistem membakar spesialisasi secara permanen dan mengunci jalur ke mode aman.
-- **Audit Kinerja Ilmiah:** Mengeliminasi _overhead dispatch_ dinamis Python menghasilkan peningkatan kecepatan throughput **4.5× hingga 7.14× lebih cepat**!
+- **Audit Kinerja Ilmiah:** Mengeliminasi _overhead dispatch_ dinamis Python menghasilkan peningkatan kecepatan throughput **3.1× hingga 3.25× lebih cepat vs target generik** (terukur konsisten di Python 3.10–3.13, Linux x86_64). Terhadap `operator.add` native C-level, SODS masih 4.3× lebih lambat — trade-off yang jujur dari PoC Python wrapper.
 
 ### 3. ⚖️ [Pengujian & Benchmark Ilmiah (`benchmarks/` & `tests/`)](./benchmarks)
 

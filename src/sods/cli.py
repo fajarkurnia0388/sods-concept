@@ -1,8 +1,8 @@
 """
 SODS Command-Line Interface (CLI)
 =================================
-Provides a highly polished storefront entrypoint for running Observer-Driven Specialization
-workflows directly from terminal environments.
+Provides a terminal entrypoint for running Observer-Driven Specialization
+workflows.
 """
 
 import argparse
@@ -29,7 +29,7 @@ def main():
     # ── Command 2: Specialize ────────────────────────────────────────────────
     parser_spec = subparsers.add_parser("specialize", help="Reconstitute profile JSON and execute warm run fast paths")
     parser_spec.add_argument("--target", type=str, default="generic_add", help="Target function name to load fast path (default: generic_add)")
-    parser_spec.add_argument("--workload-size", type=int, default=10000, help="Number of ultra-fast operations to run (default: 10000)")
+    parser_spec.add_argument("--workload-size", type=int, default=10000, help="Number of operations to run (default: 10000)")
 
     # ── Command 3: Verify ────────────────────────────────────────────────────
     parser_verify = subparsers.add_parser("verify", help="Run empirical equivalence verifier on bounded target domain inputs")
@@ -76,7 +76,7 @@ def main():
             
         workloads = [(i, i + 1) for i in range(args.workload_size)]
         results, deopts = sandbox.warm_run(args.target, generic_add, workloads)
-        print(f"\n [DONE] {args.workload_size:,} operations completed (PoC Python).")
+        print(f"\n [DONE] {args.workload_size:,} operations completed.")
         print(f" • Sample Output  : {results[:3]}...")
         print(f" • OSR Evacuations: {deopts}x failures -> transparent fallback triggered.")
 

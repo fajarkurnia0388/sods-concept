@@ -7,7 +7,7 @@
 [![Genesis](https://img.shields.io/badge/genesis-Di%20TeknoIn%20Inspiration-ffbd2e.svg)](./GENESIS_EN.md)
 [![Speedup](https://img.shields.io/badge/speedup-3.25×_vs_generic_/_0.24×_vs_native-56d364.svg)](./benchmarks/bench_add.py)
 [![Status](https://img.shields.io/badge/status-Educational_PoC_Python-yellow.svg)](#)
-[![Tests](https://img.shields.io/badge/tests-7/7_passing-success.svg)](./tests/test_sods.py)
+[![Tests](https://img.shields.io/badge/tests-9/9_(3.10--3.13)_passing-success.svg)](./tests/test_sods.py)
 [![Vibe](https://img.shields.io/badge/vibe-Doom%20(1993)%20-Apple%20Task%20Manager%20Efficiency-f0883e.svg)](./GENESIS_EN.md)
 
 </div>
@@ -31,6 +31,10 @@ SODS starts with a fundamental theoretical question: *"Since Rice's Theorem (195
 This project models the philosophy of modern JIT compilers (*V8*, *PyPy*, *GraalVM*) and contemporary AI systems dynamic compilation techniques (such as *torch.compile* and *Apache TVM*) at the industrial level, packaging them into a roadmap for an *external OS-level wrapper converter*.
 
 ---
+
+## ⚠️ Limitations & Disclaimer (Research PoC)
+
+This project is purely an **Educational Python PoC** and not a *production runtime*. Please see [ROADMAP_STATUS.md](./ROADMAP_STATUS.md) for the reality matrix of capabilities that are *Implemented*, *Simulated*, or merely *Proposed Roadmap*.
 
 ## 🌟 The Massive Potential of SODS Tools (Why SODS Matters)
 

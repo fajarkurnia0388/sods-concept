@@ -29,7 +29,7 @@ from .specializer import make_specialized_add, SpecializedFunction
 CACHE_DIR = ".sods"
 PROFILE_PATH = os.path.join(CACHE_DIR, "profile.json")
 
-_COOKIE_HMAC_KEY = getattr(sys, 'platform', 'unknown').encode() + b"_sods_secret"
+_COOKIE_HMAC_KEY = os.environ.get("SODS_HMAC_KEY", getattr(sys, 'platform', 'unknown') + "_sods_secret").encode("utf-8")
 
 # Production roadmap: replace HMAC-SHA256 with Ed25519
 # pip install cryptography
@@ -60,7 +60,6 @@ class SODSSandbox:
         self._lock = threading.Lock() # Ensures complete thread-safety across concurrent access
 
         if reset_cache and os.path.exists(self.profile_path):
-            os.chmod(self.profile_path, 0o600)
             os.remove(self.profile_path)
 
     # ── STAGE 1: COLD RUN (PEP 669 Sys Monitoring Enabled) ──────────────────
@@ -84,10 +83,10 @@ class SODSSandbox:
                     def _call_handler(code, offset, callable, arg0):
                         nonlocal call_count
                         call_count += 1
-                        return monitoring.DISABLE
+                        return None
                     monitoring.register_callback(TOOL_ID, monitoring.events.CALL, _call_handler)
                     print(f"  [PEP 669] sys.monitoring active (tool_id={TOOL_ID}), CALL events registered")
-                except Exception as e:
+                except (ImportError, AttributeError, ValueError) as e:
                     print(f"  [PEP 669] unavailable: {e}")
 
             if is_io_side_effect:
@@ -228,13 +227,13 @@ class SODSSandbox:
                 "signature_algo": algo
             }
 
-            if os.path.exists(self.profile_path):
-                os.chmod(self.profile_path, 0o600)
-                
             with open(self.profile_path, "w") as f:
                 json.dump(envelope, f, indent=2)
                 
-            os.chmod(self.profile_path, 0o400)
+            try:
+                os.chmod(self.profile_path, 0o400)
+            except OSError:
+                pass
                 
             print(f"\n[COOKIE] Cookie serialization successful. Metadata saved to: {self.profile_path}")
             print(f"  • Program SHA-256 : {data['program_hash'][:16]}...")

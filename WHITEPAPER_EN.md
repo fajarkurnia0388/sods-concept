@@ -245,6 +245,14 @@ AI compilers utilize the exact same techniques:
 
 For SODS, this convergence validates that runtime observation and adaptive specialization on bounded domains can be efficiently implemented. Chapter V will detail how these AI compiler principles are synthesized into the concrete SODS prototype architecture.
 
+### 4.11 Reproducibility and the Illusion of Absolute Benchmarks
+A fundamental challenge in publishing JIT performance metrics is reproducibility. Since JIT executes dynamic optimizations on the host machine at runtime, reported speedup numbers (e.g., 3.1× – 3.25×) are subject to extreme testing environment conditions. High-precision reproducibility is disrupted by:
+1. **Thermal Throttling:** Modern CPUs dynamically adjust clock speeds based on silicon temperature, causing testing noise.
+2. **OS Context Switching:** Background OS interrupts consume CPU cycles, affecting the stability of Warm Run median figures.
+3. **Hardware Cache Alignment:** The first execution might be slow due to L1/L2 CPU cache misses.
+
+Therefore, reproducibility in this paper is measured via **Statistical Significance (P-Value / CI)**, rather than absolute values. Speedup numbers should be viewed as an empirical architectural representation of dynamic dispatch overhead elimination (strictly confined within a stable Docker environment, as provided in this repository via `Dockerfile` and `requirements.lock`), rather than a guarantee of uniform cross-software performance.
+
 ---
 
 ## CHAPTER V — ARCHITECTURAL PROPOSAL AND SIMULATIVE PROTOTYPE (SODS)
@@ -264,7 +272,9 @@ The 5-stage specialization pipeline runs as follows:
 
 ### 5.3 Evaluation of Educational PoC Implementation
 Our Python implementation (`src/sods`) demonstrates PICs, OSR deoptimization, and Tier-Lowering (deactivating the fast path permanently if deopt ratio >30%).
-- **Speedup:** Achieves **4.5× to 7.14× speedup** over the bloated generic Python code under our standard test environment (Python 3.12+, Windows 11 / Linux x86_64, Intel/AMD processor, 50,000 iterations). We honestly attribute this speedup to *Python interpreter dispatch overhead elimination*, not raw machine code generation.
+- **Speedup:** Achieves **3.1× to 3.25× speedup compared to the generic target, though still slower than native C-level execution**, over the bloated generic Python code under our standard test environment (Python 3.12+, Windows 11 / Linux x86_64, Intel/AMD processor, 50,000 iterations). We honestly attribute this speedup to *Python interpreter dispatch overhead elimination*, not raw machine code generation.
+
+**Reproducibility Note:** The empirical benchmark numbers produced are highly dependent on the testing environment, including the host operating system, hardware temperature fluctuations (CPU thermal throttling), and the specific version of the Python interpreter used (tested across versions 3.10 to 3.13).
 - **Correctness:** 100% correct calculations through fallback paths.
 - **Tier-Lowering:** Successfully burns out volatile megamorphic call sites.
 
@@ -279,13 +289,13 @@ Our Python implementation (`src/sods`) demonstrates PICs, OSR deoptimization, an
 - **Phase 4: Tauri Companion Runtime** (drop-in companion module).
 
 ### 5.6 Mitigation Map for Production-Level Externalities
-We map out solutions to 5 main systems obstacles:
-1. **Stateful Memory & I/O:** Run **Selective Specialization + Taint Analysis**. Separate `PURE` candidates from `IMPURE` functions. Mozilla `rr` proved deterministic replay of system calls is feasible.
-2. **FFI & Closed Binaries:** Use **eBPF (uprobes/kprobes)** to trace active processes with <1% overhead. Inject wrappers via **DynamoRIO/Intel PIN** dynamic binary instrumentation.
-3. **Cold Start Overhead:** Avoid full tracing. Use **Hardware PMU Statistical Sampling** (like Linux `perf`) to sample stack frames every 10ms with <1% CPU penalty.
-4. **Asynchronous Loops & Threads:** Deploy **Thread-Local Guards** and **Conservative Global Deoptimization**.
-5. **Sandbox Evasion & Timing Attacks:** Inject virtual **Timing Noise Randomization** (standard in VMware/KVM) to blind timing attacks. Validate fingerprints via **Runtime Behavioral Attestation**.
-6. **PEP 669 Monitoring:** Use Python 3.12+ `sys.monitoring` callback API for low-impact profiling.
+We map out planned solutions to 5 main systems obstacles for the future production roadmap:
+1. **Stateful Memory & I/O:** SODS will run **Selective Specialization + Taint Analysis** to separate `PURE` candidates from `IMPURE` functions. Mozilla `rr` proved deterministic replay of system calls is feasible.
+2. **FFI & Closed Binaries:** Production SODS will use **eBPF (uprobes/kprobes)** to trace active processes with <1% overhead, and is planned to inject wrappers via **DynamoRIO/Intel PIN** dynamic binary instrumentation.
+3. **Cold Start Overhead:** SODS will avoid full tracing and instead plan to use **Hardware PMU Statistical Sampling** (like Linux `perf`) to sample stack frames every 10ms with <1% CPU penalty.
+4. **Asynchronous Loops & Threads:** The roadmap dictates deploying **Thread-Local Guards** and **Conservative Global Deoptimization** to handle these scenarios.
+5. **Sandbox Evasion & Timing Attacks:** SODS will be designed to inject virtual **Timing Noise Randomization** (standard in VMware/KVM) to blind timing attacks, and will validate fingerprints via **Runtime Behavioral Attestation**.
+6. **PEP 669 Monitoring:** Future implementations will use Python 3.12+ `sys.monitoring` callback API for low-impact profiling.
 
 ---
 

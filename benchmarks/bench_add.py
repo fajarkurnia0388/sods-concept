@@ -21,6 +21,23 @@ import time
 import random
 import statistics
 import platform
+import math
+
+def compute_confidence_interval(data, confidence=0.95):
+    n = len(data)
+    mean = statistics.mean(data)
+    se = statistics.stdev(data) / math.sqrt(n)
+    z = 1.96  # Untuk 95% CI
+    margin = z * se
+    return mean, mean - margin, mean + margin
+
+def compute_speedup_significance(gen_times, spec_times):
+    """Welch's t-test sederhana."""
+    n1, n2 = len(gen_times), len(spec_times)
+    m1, m2 = statistics.mean(gen_times), statistics.mean(spec_times)
+    v1, v2 = statistics.variance(gen_times), statistics.variance(spec_times)
+    t_stat = (m1 - m2) / math.sqrt(v1/n1 + v2/n2)
+    return t_stat, abs(t_stat) > 2.0
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src")))
 
@@ -126,24 +143,34 @@ def run_benchmarks():
     speedup_vol_gen = gen_vol_median / spec_vol_median
 
     # ── Scientific Attestation Report ────────────────────────────────────────
+    t_stat, significant = compute_speedup_significance(gen_stable_times, spec_stable_times)
+    mean_spec, ci_low, ci_high = compute_confidence_interval(spec_stable_times)
+
     print("\n" + "═" * 72)
     print(" 📊 LAPORAN BENCHMARK ILMIAH EMPIRIS FINAL".center(72))
     print("═" * 72)
-    print(f"""
-  ┌──────────────────────────────┬──────────┬──────────┬──────────────────────┐
-  │ Skenario & Strategi          │ Median   │ Rata-rata│ Komparasi Empiris    │
-  ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤
-  │ A: SODS Fast Path (Stabil)   │ {spec_stable_median:>5.2f} ms │ {statistics.mean(spec_stable_times):>5.2f} ms │ ★ {speedup_stable_gen:.2f}× lebih cepat   │
-  │ A: Target Generik Lambat     │ {gen_stable_median:>5.2f} ms │ {statistics.mean(gen_stable_times):>5.2f} ms │ Acuan stabil         │
-  │ A: Acuan Native Python       │ {native_stable_median:>5.2f} ms │ {statistics.mean(native_stable_times):>5.2f} ms │ {speedup_stable_native:.2f}× dari kinerja native │"""
     
+    # Build report lines
+    lines = []
+    lines.append("  ┌──────────────────────────────┬──────────┬──────────┬──────────────────────┐")
+    lines.append("  │ Skenario & Strategi          │ Median   │ Rata-rata│ Komparasi Empiris    │")
+    lines.append("  ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤")
+    lines.append(f"  │ A: SODS Fast Path (Stabil)   │ {spec_stable_median:>5.2f} ms │ {statistics.mean(spec_stable_times):>5.2f} ms │ ★ {speedup_stable_gen:.2f}× lebih cepat   │")
+    lines.append(f"  │ A: Target Generik Lambat     │ {gen_stable_median:>5.2f} ms │ {statistics.mean(gen_stable_times):>5.2f} ms │ Acuan stabil         │")
+    lines.append(f"  │ A: Acuan Native Python       │ {native_stable_median:>5.2f} ms │ {statistics.mean(native_stable_times):>5.2f} ms │ {speedup_stable_native:.2f}× dari kinerja native │")
     if has_numba:
-        print(f"  │ A: Numba JIT (Opsional)      │ {numba_stable_median:>5.2f} ms │ {statistics.mean(numba_stable_times):>5.2f} ms │ Acuan JIT C murni    │")
-
-    print(f"""  ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤
-  │ B: SODS Fast Path (Volatile) │ {spec_vol_median:>5.2f} ms │ {statistics.mean(spec_vol_times):>5.2f} ms │ {speedup_vol_gen:.2f}× (Terbebani Guard)│
-  │ B: Target Generik Lambat     │ {gen_vol_median:>5.2f} ms │ {statistics.mean(gen_vol_times):>5.2f} ms │ Acuan volatile       │
-  └──────────────────────────────┴──────────┴──────────┴──────────────────────┘
+        lines.append(f"  │ A: Numba JIT (Opsional)      │ {numba_stable_median:>5.2f} ms │ {statistics.mean(numba_stable_times):>5.2f} ms │ Acuan JIT C murni    │")
+    lines.append("  ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤")
+    lines.append(f"  │ B: SODS Fast Path (Volatile) │ {spec_vol_median:>5.2f} ms │ {statistics.mean(spec_vol_times):>5.2f} ms │ {speedup_vol_gen:.2f}× (Terbebani Guard)│")
+    lines.append(f"  │ B: Target Generik Lambat     │ {gen_vol_median:>5.2f} ms │ {statistics.mean(gen_vol_times):>5.2f} ms │ Acuan volatile       │")
+    lines.append("  └──────────────────────────────┴──────────┴──────────┴──────────────────────┘")
+    
+    print("\n".join(lines))
+    print(f"""
+  📈 STATISTICAL ANALYSIS (Skenario A Stabil):
+   • T-statistic (Welch's) : {t_stat:.2f}
+   • Significance (α=0.05) : {'SIGNIFICANT' if significant else 'NOT SIGNIFICANT'}
+   • 95% Confidence Interval: [{ci_low:.2f}, {ci_high:.2f}] ms
 
   • Hasil Skenario A (Stabil)   : PIC memotong overhead secara optimal (★ {speedup_stable_gen:.2f}× Lebih Cepat).
   • Hasil Skenario B (Volatile) : Ketika masukan acak, PIC nyaris tidak memberi keuntungan
