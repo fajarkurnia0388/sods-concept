@@ -9,6 +9,8 @@ Copyright (c) 2026 Fajar Kurnia
 Licensed under MIT or Apache-2.0.
 """
 
+__version__ = "0.2.0"
+
 from .profile import Profile
 from .specializer import make_specialized_add
 from .verifier import EquivalenceVerifier

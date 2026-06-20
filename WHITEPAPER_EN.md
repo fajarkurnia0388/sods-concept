@@ -101,6 +101,7 @@ Amid this urgency, an intuitive expectation is frequently voiced in developer fo
 ### 1.5 Scope of the Study and Clarification on "Doom-like Efficiency"
 - **App Scope:** Focuses on desktop apps, webview-based shells (*Electron/Tauri*), and dynamic backend services. Real-time embedded systems, silicon firmware, and GPU-intensive games are excluded.
 - **Efficiency Metrics:** Measured in (a) RAM footprint, (b) bundle/binary size, and (c) startup time/execution latency.
+- **Memory Boundaries of Dynamic Specialization:** The Observer-Driven specialization concept heavily relies on input stability. If a call site is highly polymorphic (e.g., polyglot types, invoked with dozens of combinations constantly), the engine is forced to compile too many binary variants for the same function. This triggers a risk of **JIT internal memory bloat** and **Guard Thrashing** (constant guard failures that destroy CPU Instruction Caches). To prevent this, production systems absolutely require a *Tier-Lowering Protection* mechanism (as demonstrated in SODS PoC) to burn specializations and revert to a safe generic mode.
 - **Clarification:** "Doom-like efficiency" does **not** mean writing unreadable 1993-style code with unsafe memory hacks. It refers to **architectural discipline that prioritizes an optimal ratio between functionality and hardware resource consumption**.
 
 ---
@@ -268,7 +269,7 @@ Our Python implementation (`src/sods`) demonstrates PICs, OSR deoptimization, an
 - **Tier-Lowering:** Successfully burns out volatile megamorphic call sites.
 
 ### 5.4 Security Mitigations and Reality Gap Audit
-- **Cookie Security:** The PoC profile is stored as plain JSON. Production requires Ed25519 HMAC signatures to prevent profile poisoning.
+- **Cookie Security:** In early iterations, the profile was stored without signatures. The PoC now actively implements **HMAC-SHA256 signatures** to protect telemetry cookies from Profile Poisoning, automatically rejecting invalid profiles.
 - **Reality Gap:** Moving from a Python closure generator to eBPF interception and Cranelift machine code emitters is a multi-year systems compiler project.
 
 ### 5.5 Integration Roadmap Towards Production

@@ -49,6 +49,17 @@ def run_benchmarks():
     import operator
     native_add_fn = operator.add
 
+    # 3. Numba JIT Compiler (Optional)
+    try:
+        import numba
+        @numba.njit
+        def numba_add(a, b):
+            return a + b
+        numba_add(1, 2) # Warmup to exclude compilation time
+        has_numba = True
+    except ImportError:
+        has_numba = False
+
     print("=" * 72)
     print(" 🧪 SUITE BENCHMARK ILMIAH INDUSTRI SODS".center(72))
     print(" Mengeksekusi Perbandingan yang Sangat Adil pada Numerik Terbatas".center(72))
@@ -87,6 +98,13 @@ def run_benchmarks():
     native_stable_times = benchmark_candidate(lambda: [native_add_fn(a, b) for a, b in workloads_stable], "Native     ")
     native_stable_median = statistics.median(native_stable_times)
 
+    if has_numba:
+        print(f"\n [Kandidat 4] Komparasi Numba JIT (Opsional)")
+        numba_stable_times = benchmark_candidate(lambda: [numba_add(a, b) for a, b in workloads_stable], "Numba      ")
+        numba_stable_median = statistics.median(numba_stable_times)
+    else:
+        numba_stable_median = None
+
     speedup_stable_gen = gen_stable_median / spec_stable_median
     speedup_stable_native = native_stable_median / spec_stable_median
 
@@ -117,8 +135,12 @@ def run_benchmarks():
   ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤
   │ A: SODS Fast Path (Stabil)   │ {spec_stable_median:>5.2f} ms │ {statistics.mean(spec_stable_times):>5.2f} ms │ ★ {speedup_stable_gen:.2f}× lebih cepat   │
   │ A: Target Generik Lambat     │ {gen_stable_median:>5.2f} ms │ {statistics.mean(gen_stable_times):>5.2f} ms │ Acuan stabil         │
-  │ A: Acuan Native Python       │ {native_stable_median:>5.2f} ms │ {statistics.mean(native_stable_times):>5.2f} ms │ {speedup_stable_native:.2f}× dari kinerja native │
-  ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤
+  │ A: Acuan Native Python       │ {native_stable_median:>5.2f} ms │ {statistics.mean(native_stable_times):>5.2f} ms │ {speedup_stable_native:.2f}× dari kinerja native │"""
+    
+    if has_numba:
+        print(f"  │ A: Numba JIT (Opsional)      │ {numba_stable_median:>5.2f} ms │ {statistics.mean(numba_stable_times):>5.2f} ms │ Acuan JIT C murni    │")
+
+    print(f"""  ├──────────────────────────────┼──────────┼──────────┼──────────────────────┤
   │ B: SODS Fast Path (Volatile) │ {spec_vol_median:>5.2f} ms │ {statistics.mean(spec_vol_times):>5.2f} ms │ {speedup_vol_gen:.2f}× (Terbebani Guard)│
   │ B: Target Generik Lambat     │ {gen_vol_median:>5.2f} ms │ {statistics.mean(gen_vol_times):>5.2f} ms │ Acuan volatile       │
   └──────────────────────────────┴──────────┴──────────┴──────────────────────┘

@@ -702,12 +702,15 @@
             <b>Apa itu SODS?</b> SODS adalah sebuah <i>runtime engine</i> eksperimental yang bekerja di belakang layar untuk mengamati aplikasi yang sedang berjalan. Ia secara otomatis mendeteksi jalur kode yang lambat dan menyulapnya menjadi instruksi yang jauh lebih cepat tanpa perlu memodifikasi kode aslinya. Tujuannya? Membuat aplikasi modern yang boros RAM bisa kembali berjalan sekencang dan seringan perangkat lunak klasik masa lalu.
         </p>
 
+        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid #ffc107; border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; font-size: 13px; color: #ffc107; text-align: center;">
+          ⚠️ <b>Research PoC — Educational Python</b> — Bukan production runtime. Lihat <a href="./ROADMAP_STATUS.md" style="color:#58a6ff">ROADMAP_STATUS.md</a> untuk matriks Implemented / Simulated / Proposed.
+        </div>
         <div class="hero-badges">
             <div class="badge">Atribusi <b>Fajar Kurnia &amp; Arena.ai</b></div>
             <div class="badge">Inspirasi Esai <b>Di TeknoIn</b></div>
-            <div class="badge">Akselerasi Throughput <b>4.5× – 7.14×</b></div>
-            <div class="badge">Konvergensi <b>torch.compile &amp; Mojo JIT</b></div>
-            <div class="badge">Invarian JIT <b>Teruji 100% Lulus</b></div>
+            <div class="badge">Speedup <b>3.25× vs generic / 0.24× vs native</b></div>
+            <div class="badge">PoC <b>Educational Python</b></div>
+            <div class="badge">Tests <b>7/7 passing</b></div>
             <div class="badge">Lisensi <b>MIT / Apache-2.0</b></div>
         </div>
     </section>
@@ -717,6 +720,10 @@
 
         <!-- ── Seksi 0: Potensi Masa Depan (Why SODS Matters) ───────────── -->
         <h2 class="section-title">Potensi Raksasa Peta Jalan Ekosistem SODS</h2>
+
+        <div style="background: rgba(255,193,7,0.08); border:1px solid #ffc107; border-radius:8px; padding:12px 16px; margin-bottom:16px; font-size:13px; color:#ffc107;">
+          🚧 <b>ROADMAP / VISI — BELUM DIIMPLEMENTASIKAN</b> — Bagian di bawah ini adalah proyeksi dampak <i>jika</i> tools SODS production kelak dibangun (Fase 1-4 di Whitepaper). Implementasi saat ini adalah PoC edukasi Python.
+        </div>
 
         <div class="potential-grid">
             <!-- Junior -->
@@ -840,16 +847,15 @@
             <div class="stage-card s2">
                 <div class="stage-num">2</div>
                 <div class="stage-header">
-                    <h3 class="stage-title">SPECIALIZER — Bangkitkan Jalur Perangkat Keras Cepat &amp; Guards</h3>
+                    <h3 class="stage-title">SPECIALIZER — Bangkitkan Jalur Cepat Python &amp; Guards</h3>
                     <span class="stage-tag">Zero Modification Bounds</span>
                 </div>
                 <p class="stage-desc">
-                    Begitu profil pemanggilan stabil (&gt;50 eksekusi), sistem memancarkan Assembly tingkat perangkat keras
-                    dengan injeksi pengaman Guard.
+                    Begitu profil pemanggilan stabil (&gt;50 eksekusi), sistem memancarkan jalur cepat Python dengan injeksi pengaman Guard. <i>Roadmap produksi: Assembly x86_64 via Cranelift</i>
                 </p>
                 <div class="comp-grid">
                     <div class="comp-box comp-purple">
-                        <b>eBPF + DynamoRIO Kernel Probes</b>
+                        <b>[Roadmap] eBPF + DynamoRIO Kernel Probes</b>
                         Mencegat proses yang sedang berjalan dan menyuntikkan Probe observasi tanpa memodifikasi 1 bit
                         pun berkas aslinya.
                     </div>
@@ -898,7 +904,7 @@
                     secara fisik ke media penyimpan OS.</p>
                 <div class="cookie-meta">
                     <code>.sods/profile.json</code>
-                    <span>Dilindungi oleh Ed25519 HMAC · chmod 400 read-only · Runtime Behavioral Fingerprint
+                    <span>Dilindungi oleh HMAC-SHA256 · chmod 400 read-only · <i>Roadmap: Ed25519</i> · Runtime Behavioral Fingerprint
                         Attestation ✓</span>
                 </div>
             </div>
@@ -909,7 +915,7 @@
             <div class="stage-card s5">
                 <div class="stage-num">5</div>
                 <div class="stage-header">
-                    <h3 class="stage-title">WARM RUN — Eksekusi Melompat 4.5× – 7.14× Lebih Cepat</h3>
+                    <h3 class="stage-title">WARM RUN — Eksekusi 3.25× vs generic (PoC Python)</h3>
                     <span class="stage-tag">Ultra High Throughput</span>
                 </div>
                 <p class="stage-desc">

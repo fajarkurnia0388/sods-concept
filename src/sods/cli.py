@@ -14,7 +14,7 @@ from sods.dummy_target import generic_add, generic_log_io
 
 def main():
     parser = argparse.ArgumentParser(
-        description="⚙️ SODS (Sandbox Observer-Driven Specializer) CLI — A Production Concept Specialization Runtime",
+        description="⚙️ SODS CLI — Educational PoC for Observer-Driven Runtime Specialization",
         formatter_class=argparse.RawTextHelpFormatter
     )
     
@@ -35,10 +35,22 @@ def main():
     parser_verify = subparsers.add_parser("verify", help="Run empirical equivalence verifier on bounded target domain inputs")
     parser_verify.add_argument("--target", type=str, default="generic_add", help="Target function name to verify (default: generic_add)")
 
+    # ── Command 4: Bench ─────────────────────────────────────────────────────
+    parser_bench = subparsers.add_parser("bench", help="Run rigorous scientific benchmarks (Skenario A & B)")
+
     args = parser.parse_args()
 
     # Instantiate central sandbox wrapper
     sandbox = SODSSandbox()
+
+    if args.command == "bench":
+        try:
+            from benchmarks.bench_add import run_benchmarks
+            run_benchmarks()
+        except ImportError:
+            print(" [ERROR] benchmarks module not found. Make sure you run from the project root or PYTHONPATH is set.")
+            sys.exit(1)
+        return
 
     if args.command == "observe":
         print("=" * 72)
@@ -64,7 +76,7 @@ def main():
             
         workloads = [(i, i + 1) for i in range(args.workload_size)]
         results, deopts = sandbox.warm_run(args.target, generic_add, workloads)
-        print(f"\n [SUCCESS] {args.workload_size:,} dynamic operations completed.")
+        print(f"\n [DONE] {args.workload_size:,} operations completed (PoC Python).")
         print(f" • Sample Output  : {results[:3]}...")
         print(f" • OSR Evacuations: {deopts}x failures -> transparent fallback triggered.")
 

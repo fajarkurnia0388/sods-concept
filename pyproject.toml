@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sods"
-version = "0.1.0"
+version = "0.2.0"
 description = "Sandbox Observer-Driven Specializer (SODS) — A Proof-of-Concept Python Runtime Specialization Framework"
 readme = "README.md"
 authors = [
@@ -24,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Topic :: Education",
     "Topic :: Software Development :: Compilers",
     "Topic :: Software Development :: Interpreters",
 ]

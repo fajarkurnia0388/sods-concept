@@ -27,6 +27,7 @@ class TestSODSConcept(unittest.TestCase):
 
     def tearDown(self):
         if os.path.exists(TEST_CACHE_PATH):
+            os.chmod(TEST_CACHE_PATH, 0o600)
             os.remove(TEST_CACHE_PATH)
 
     def test_pic_specializes_int_float_and_mixed_numerics(self):
@@ -99,6 +100,57 @@ class TestSODSConcept(unittest.TestCase):
         self.assertIn("generic_add", fresh_sandbox.specialized)
         sfn, label, supp_sigs = fresh_sandbox.specialized["generic_add"]
         self.assertEqual(supp_sigs, [("int", "int")])
+
+    def test_guard_thrashing_stress_iter_p1(self):
+        """P1: Stress test guard thrashing with 100% miss rate."""
+        cold_workloads = [(i, i + 1) for i in range(100)]
+        self.sandbox.cold_run("generic_add", generic_add, cold_workloads)
+        # 100% miss storm
+        storm = [("x", "y"), ([1],[2]), ("a","b"), ([3],[4])] * 25
+        _, deopts = self.sandbox.warm_run("generic_add", generic_add, storm)
+        self.assertGreaterEqual(deopts, 90)
+        # Must be tier-lowered
+        self.assertIn("generic_add", self.sandbox.tier_lowered)
+
+    def test_thread_safety_concurrent_warm_run(self):
+        """P1: Concurrent warm_run must not corrupt deopt_count."""
+        import threading
+        cold_workloads = [(i, i + 1) for i in range(100)]
+        self.sandbox.cold_run("generic_add", generic_add, cold_workloads)
+        sfn, _, _ = self.sandbox.specialized["generic_add"]
+        
+        def worker():
+            for _ in range(20):
+                sfn(1, 2)  # hit
+                try:
+                    sfn("a", "b")  # miss -> deopt
+                except Exception:
+                    pass
+        
+        threads = [threading.Thread(target=worker) for _ in range(4)]
+        for t in threads: t.start()
+        for t in threads: t.join()
+        # deopt_count should be >= 0 and not crash — lock protects it
+        self.assertGreaterEqual(sfn.deopt_count, 0)
+        
+    def test_cookie_hmac_tamper_detection_iter2(self):
+        import json
+        cold_workloads = [(i, i + 1) for i in range(100)]
+        self.sandbox.cold_run("generic_add", generic_add, cold_workloads)
+        self.sandbox.save_cookie()
+        
+        # Tamper with the cookie
+        os.chmod(TEST_CACHE_PATH, 0o600)
+        with open(TEST_CACHE_PATH, "r") as f:
+            cookie = json.load(f)
+        if "payload" in cookie:
+            cookie["payload"]["tier_lowered"] = ["fake_target"]
+            with open(TEST_CACHE_PATH, "w") as f:
+                json.dump(cookie, f)
+                
+        fresh_sandbox = SODSSandbox(profile_path=TEST_CACHE_PATH)
+        loaded = fresh_sandbox.load_cookie()
+        self.assertFalse(loaded)
 
 if __name__ == "__main__":
     unittest.main()

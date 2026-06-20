@@ -21,12 +21,25 @@ import random
 import hashlib
 import threading
 from typing import Callable, List, Tuple, Any
+import hmac
 
 from .profile import Profile
 from .specializer import make_specialized_add, SpecializedFunction
 
 CACHE_DIR = ".sods"
 PROFILE_PATH = os.path.join(CACHE_DIR, "profile.json")
+
+_COOKIE_HMAC_KEY = getattr(sys, 'platform', 'unknown').encode() + b"_sods_secret"
+
+# Production roadmap: replace HMAC-SHA256 with Ed25519
+# pip install cryptography
+# See: https://cryptography.io/en/latest/hazmat/primitives/asymmetric/ed25519/
+def _sign_cookie(payload_bytes: bytes) -> tuple[str, str]:
+    return hmac.new(_COOKIE_HMAC_KEY, payload_bytes, hashlib.sha256).hexdigest(), "hmac-sha256"
+
+def _verify_cookie(payload_bytes: bytes, sig: str) -> bool:
+    expected_sig, _ = _sign_cookie(payload_bytes)
+    return hmac.compare_digest(expected_sig, sig)
 
 def file_sha256(path: str) -> str:
     """Computes a secure SHA-256 cryptographic hash of a source file."""
@@ -47,6 +60,7 @@ class SODSSandbox:
         self._lock = threading.Lock() # Ensures complete thread-safety across concurrent access
 
         if reset_cache and os.path.exists(self.profile_path):
+            os.chmod(self.profile_path, 0o600)
             os.remove(self.profile_path)
 
     # ── STAGE 1: COLD RUN (PEP 669 Sys Monitoring Enabled) ──────────────────
@@ -61,6 +75,20 @@ class SODSSandbox:
             # Incorporate PEP 669 sys.monitoring attestation comment if Python >= 3.12
             if sys.version_info >= (3, 12):
                 print(f"  [PEP 669 Hooks Active] Python {sys.version_info.major}.{sys.version_info.minor} detected. Using 'sys.monitoring' zero-overhead CALL/JUMP observation.")
+                try:
+                    import sys.monitoring as monitoring
+                    TOOL_ID = 5
+                    monitoring.use_tool_id(TOOL_ID, "sods")
+                    monitoring.set_events(TOOL_ID, monitoring.events.CALL | monitoring.events.PY_RETURN)
+                    call_count = 0
+                    def _call_handler(code, offset, callable, arg0):
+                        nonlocal call_count
+                        call_count += 1
+                        return monitoring.DISABLE
+                    monitoring.register_callback(TOOL_ID, monitoring.events.CALL, _call_handler)
+                    print(f"  [PEP 669] sys.monitoring active (tool_id={TOOL_ID}), CALL events registered")
+                except Exception as e:
+                    print(f"  [PEP 669] unavailable: {e}")
 
             if is_io_side_effect:
                 print(f"  [TAINT: IMPURE] Function '{fn_name}' exhibits non-deterministic side-effects (I/O).")
@@ -74,6 +102,13 @@ class SODSSandbox:
                 results.append(fn(*args))
 
             self._try_specialize(fn_name, fn)
+            
+            if sys.version_info >= (3, 12) and 'monitoring' in locals():
+                try:
+                    monitoring.free_tool_id(TOOL_ID)
+                except Exception:
+                    pass
+                    
             return results
 
     def _try_specialize(self, fn_name: str, fn: Callable) -> None:
@@ -103,7 +138,6 @@ class SODSSandbox:
         Thread-safety synchronized during tier-lowering evaluation.
         """
         print(f"\n[WARM RUN] '{fn_name}'", end="")
-        time.sleep(random.uniform(0, 0.000001))
 
         with self._lock:
             is_lowered = fn_name in self.tier_lowered
@@ -185,8 +219,22 @@ class SODSSandbox:
                 },
                 "tier_lowered": list(self.tier_lowered),
             }
+            payload_bytes = json.dumps(data, sort_keys=True).encode("utf-8")
+            sig, algo = _sign_cookie(payload_bytes)
+            
+            envelope = {
+                "payload": data,
+                "signature": sig,
+                "signature_algo": algo
+            }
+
+            if os.path.exists(self.profile_path):
+                os.chmod(self.profile_path, 0o600)
+                
             with open(self.profile_path, "w") as f:
-                json.dump(data, f, indent=2)
+                json.dump(envelope, f, indent=2)
+                
+            os.chmod(self.profile_path, 0o400)
                 
             print(f"\n[COOKIE] Cookie serialization successful. Metadata saved to: {self.profile_path}")
             print(f"  • Program SHA-256 : {data['program_hash'][:16]}...")
@@ -200,7 +248,18 @@ class SODSSandbox:
                 return False
 
             with open(self.profile_path) as f:
-                data = json.load(f)
+                envelope = json.load(f)
+
+            if "payload" not in envelope or "signature" not in envelope:
+                print("[COOKIE LOADER] [ERROR] Invalid cookie format. Tampering detected!")
+                return False
+                
+            payload_bytes = json.dumps(envelope["payload"], sort_keys=True).encode("utf-8")
+            if not _verify_cookie(payload_bytes, envelope["signature"]):
+                print("[COOKIE LOADER] [ERROR] HMAC Signature mismatch. Tampering detected!")
+                return False
+                
+            data = envelope["payload"]
 
             for fn, bucket in data["profile"]["type_seen"].items():
                 self.profile.type_seen[fn] = {

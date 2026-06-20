@@ -2,10 +2,12 @@
   <h1>⚙️ SODS — Sandbox Observer-Driven Specializer</h1>
   <p><b>A Research Concept & Educational PoC for Observer-Driven Runtime Specialization</b></p>
 
-[![Version](https://img.shields.io/badge/version-2.1%20(Research%20PoC)-58a6ff.svg)](./prototype_sods.py)
+[![Version](https://img.shields.io/badge/version-2.3%20(Research%20PoC)-58a6ff.svg)](./prototype_sods.py)
 [![Theory](https://img.shields.io/badge/theory-Rice's%20Theorem%20Workaround-a371f7.svg)](./WHITEPAPER_EN.md)
 [![Genesis](https://img.shields.io/badge/genesis-Di%20TeknoIn%20Inspiration-ffbd2e.svg)](./GENESIS_EN.md)
-[![Speedup](https://img.shields.io/badge/speedup-4.5×%20to%207.14×%20(Simulated)-56d364.svg)](./prototype_sods.py)
+[![Speedup](https://img.shields.io/badge/speedup-3.25×_vs_generic_/_0.24×_vs_native-56d364.svg)](./benchmarks/bench_add.py)
+[![Status](https://img.shields.io/badge/status-Educational_PoC_Python-yellow.svg)](#)
+[![Tests](https://img.shields.io/badge/tests-7/7_passing-success.svg)](./tests/test_sods.py)
 [![Vibe](https://img.shields.io/badge/vibe-Doom%20(1993)%20-Apple%20Task%20Manager%20Efficiency-f0883e.svg)](./GENESIS_EN.md)
 
 </div>
@@ -78,17 +80,45 @@ This repository presents a **Hybrid Research Design (*Design Science Research* &
 - **WASI I/O Boundary:** Intercepts functions with I/O side effects using *Taint Analysis*.
 - **Thread-Safety Locked:** Protected by `threading.Lock()` to handle concurrent execution in multithreaded or asyncio workloads.
 - **Tier-Lowering Protection:** Monitors volatile megamorphic call sites. If the guard failure ratio exceeds **30%**, the system permanently deoptimizes the specialized path and locks execution to safe generic mode.
-- **Scientific Performance Audit:** Eliminating Python's dynamic dispatch overhead yields throughput speedups of **4.5× to 7.14×**!
+- **Cookie Security (Iteration 2):** HMAC-SHA256 signature + chmod 400 + tamper detection. Production roadmap: Ed25519.
+- **Scientific Performance Audit (CPython 3.13, Linux x86_64, 50k ops):**
+  - Stable Scenario: **3.25× faster vs `generic_add`**
+  - vs `operator.add` native: **0.24× (4.26× slower)**
+  - Volatile Scenario: **0.69× vs generic (31% slower — Guard thrashing)**
+  - See `benchmarks/bench_add.py` for full reproduction.
 
 ### 3. ⚖️ [Scientific Benchmarks & Tests (`benchmarks/` & `tests/`)](./benchmarks)
 
 - `benchmarks/bench_add.py` runs comparative benchmarks across 2 scenarios (Stable vs. Volatile Workloads) against Python's native C implementation (`operator.add`).
-- `tests/test_sods.py` automatically verifies 100% of JIT invariants.
+- `tests/test_sods.py` verifies 7/7 JIT invariants automatically (PIC, Guard deopt, Tier-Lowering, WASI taint, cookie HMAC).
 
 ### 4. 🌐 [Visual Architecture Preview (`index.html`)](https://fajarkurnia0388.github.io/sods-runtime/)
 
 - Interactive graphical visualization featuring a *Premium 2026 Dark-Mode* UI (`SF Mono` / layered cards structure).
 - Illustrates the complete 5-stage pipeline flow (from Cold Run to Warm Run).
+
+### 🍪 5. Example Cookie State (profile.json)
+Here is a telemetry snippet recorded by SODS after a *Cold Run*, protected with an HMAC-SHA256 signature to prevent tampering:
+```json
+{
+  "payload": {
+    "schema_version": 2,
+    "program_hash": "e3b0c44298fc1c14...",
+    "profile": {
+      "type_seen": { "generic_add": { "int,int": 100 } }
+    },
+    "specialized": {
+      "generic_add": {
+        "label": "Polymorphic Inline Cache (PIC: 1)",
+        "supported_signatures": [["int", "int"]]
+      }
+    },
+    "tier_lowered": []
+  },
+  "signature": "8a3f...d7",
+  "signature_algo": "hmac-sha256"
+}
+```
 
 ---
 

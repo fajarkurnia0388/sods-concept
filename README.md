@@ -91,6 +91,29 @@ Repositori ini menyajikan **Desain Penelitian Hibrida (_Design Science Research_
 - Visualisasi grafis interaktif berdesain _Dark-Mode 2026 Premium_ (`SF Mono` / struktur kartu berlapis).
 - Mengilustrasikan aliran 5 Tahap _Pipeline_ secara lengkap (dari _Cold Run_ hingga _Warm Run_).
 
+### 🍪 5. Contoh State Cookie (profile.json)
+Berikut adalah cuplikan metrik telemetri yang disimpan SODS paska _Cold Run_, dilindungi HMAC-SHA256:
+```json
+{
+  "payload": {
+    "schema_version": 2,
+    "program_hash": "e3b0c44298fc1c14...",
+    "profile": {
+      "type_seen": { "generic_add": { "int,int": 100 } }
+    },
+    "specialized": {
+      "generic_add": {
+        "label": "Polymorphic Inline Cache (PIC: 1)",
+        "supported_signatures": [["int", "int"]]
+      }
+    },
+    "tier_lowered": []
+  },
+  "signature": "8a3f...d7",
+  "signature_algo": "hmac-sha256"
+}
+```
+
 ---
 
 ## 🚀 Cara Menjalankan CLI Tools & Prototipe
