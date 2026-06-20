@@ -272,6 +272,8 @@ class SODSSandbox:
 
         if fn_name == "generic_add":
             sfn, label = make_specialized_add(stable_sigs)
+            if sfn is None:
+                return
         else:
             sfn, label = fn, "Generic Passthrough"
 
@@ -458,7 +460,7 @@ def main():
         )
 
     print("=" * 72)
-    print("  PROTOTYPE SODS v2.2 — Sandbox Observer-Driven Specializer".center(72))
+    print("  PROTOTYPE SODS v2.3 — Sandbox Observer-Driven Specializer".center(72))
     print("  PIC │ Tier-Lowering │ WASI Boundary │ OSR Deopt │ Cookie Cache".center(72))
     print("=" * 72)
 
@@ -581,7 +583,7 @@ def main():
     # TABEL KESIMPULAN AUDIT
     # ─────────────────────────────────────────────────────────────────────────
     print("\n" + "═" * 72)
-    print("  KESIMPULAN AUDIT PROTOTIPE SODS v2.2".center(72))
+    print("  KESIMPULAN AUDIT PROTOTIPE SODS v2.3".center(72))
     print("═" * 72)
     print(f"""
   ┌────┬───────────────────────────────────────┬──────────────────┐
