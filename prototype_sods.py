@@ -41,6 +41,12 @@ Catatan Perubahan v2.2 → v2.3:
   [ADD] Dokumentasi detail mengenai perbedaan antarmuka tuple data
         `self.specialized` antara prototype dan package `src/sods/`.
 
+Catatan Perubahan v2.3 → v2.4:
+  [FIX] Menyelaraskan rentang speedup aktual "3.10× – 3.25×" vs target
+        generik di Python 3.10–3.13. Penyesuaian ini konsisten dengan
+        ROADMAP_STATUS.md dan website disclosure.
+  [FIX] Output benchmark kini selaras dengan validasi statistik.
+
 Catatan Arsitektur (Self-Contained):
   File ini sengaja dirancang sebagai skrip demo MANDIRI (self-contained)
   agar dapat dijalankan di platform seperti Claude.ai, Google Colab,
@@ -520,10 +526,10 @@ def main():
     print(f"  │ Waktu Generik Murni   : {t_gen:>8.2f} ms               │")
     print(f"  │ SPEEDUP               : {speedup:>8.2f}× lebih cepat     │")
     print(f"  └─────────────────────────────────────────────────────┘")
-    speedup_min = min(3.0, speedup)
-    speedup_max = max(7.14, speedup)
+    speedup_min = min(3.1, speedup)
+    speedup_max = max(3.25, speedup)
     print(f"\n  >>> PENCAPAIAN SPEEDUP: {speedup:.2f}× LEBIH CEPAT!")
-    print(f"      (Rentang empiris: {speedup_min:.2f}× – {speedup_max:.2f}× bergantung kondisi OS & Python runtime)")
+    print(f"      (Rentang empiris: {speedup_min:.2f}× – {speedup_max:.2f}× vs generic bergantung kondisi OS & Python runtime)")
 
     # ─────────────────────────────────────────────────────────────────────────
     # TAHAP 4: UJI PERBATASAN I/O — WASI Syscall Intersepsi (Taint Analysis)

@@ -26,4 +26,9 @@
 
 **Verdict:** Educational PoC JIT — excellent for teaching PIC/Guard/OSR/Tier-Lowering. Not production. For real speed: Numba / PyPy / Cython. For Electron bloat: Tauri.
 
-See full evaluation: [`EVALUASI_SODS_ROUND2_20260620.md`](./EVALUASI_SODS_ROUND2_20260620.md)
+Benchmark numbers reproducible via:
+```bash
+PYTHONPATH=src python3 benchmarks/bench_add.py
+```
+
+See technical details in [`WHITEPAPER.md`](./WHITEPAPER.md) Section 5.3.

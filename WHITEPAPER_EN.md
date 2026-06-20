@@ -272,7 +272,7 @@ The 5-stage specialization pipeline runs as follows:
 
 ### 5.3 Evaluation of Educational PoC Implementation
 Our Python implementation (`src/sods`) demonstrates PICs, OSR deoptimization, and Tier-Lowering (deactivating the fast path permanently if deopt ratio >30%).
-- **Speedup:** Achieves **3.1× to 3.25× speedup compared to the generic target, though still slower than native C-level execution**, over the bloated generic Python code under our standard test environment (Python 3.12+, Windows 11 / Linux x86_64, Intel/AMD processor, 50,000 iterations). We honestly attribute this speedup to *Python interpreter dispatch overhead elimination*, not raw machine code generation.
+- **Speedup:** Achieves **3.1× to 3.25× speedup vs `generic_add` (0.23× – 0.24× vs `operator.add` native)**, and **0.68× – 0.69× on volatile workloads** over the bloated generic Python code under our standard test environment (Python 3.10-3.13, Windows 11 / Linux x86_64, Intel/AMD processor, 50,000 iterations). We honestly attribute this speedup to *Python interpreter dispatch overhead elimination*, not raw machine code generation.
 
 **Reproducibility Note:** The empirical benchmark numbers produced are highly dependent on the testing environment, including the host operating system, hardware temperature fluctuations (CPU thermal throttling), and the specific version of the Python interpreter used (tested across versions 3.10 to 3.13).
 - **Correctness:** 100% correct calculations through fallback paths.
@@ -304,7 +304,7 @@ We map out planned solutions to 5 main systems obstacles for the future producti
 ### 6.1 Conclusions
 1. **Universal Converter Myth Busted:** A tool that magically converts any arbitrary program to its most efficient form is theoretically impossible due to Rice's Theorem.
 2. **SODS Validated:** Speculative runtime specialization is mathematically sound and has been proven in production JIT environments.
-3. **JIT Simulation Successful:** The Python PoC successfully demonstrated PIC generation, OSR, and tier-lowering with 4.5x-7.14x speedups.
+3. **JIT Simulation Successful:** The Python PoC successfully demonstrated PIC generation, OSR, and tier-lowering with ~3.2× speedups vs generic (0.24× vs native).
 4. **Radical Optimization Requires Intent:** Real-world performance leaps come from framework changes (Tauri) and Rust/WASM rewrites.
 5. **Economic Incentives Rule:** Wirth's Law persists because business prioritizes release velocity over CPU cycles.
 

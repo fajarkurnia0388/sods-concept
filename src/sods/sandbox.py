@@ -7,7 +7,7 @@ Orchestrates the entire 5-Stage Observer-Driven Specialization pipeline:
 2. Specializer: Builds specialized fast paths with synchronous Guard counters.
 3. Verify     : Executes bounded empirical equivalence verification.
 4. Cookie     : Serializes fully verifiable highly enriched metadata schema to disk.
-5. Warm Run   : Executes ultra-fast specialized code with OSR Deoptimization fallback
+5. Warm Run   : Executes specialized code with OSR Deoptimization fallback
                 and automatic tier-lowering protection on volatile megamorphic sites.
 
 Thread-safety protected via internal synchronization locks.
@@ -17,7 +17,6 @@ import json
 import os
 import sys
 import time
-import random
 import hashlib
 import threading
 from typing import Callable, List, Tuple, Any
@@ -29,7 +28,9 @@ from .specializer import make_specialized_add, SpecializedFunction
 CACHE_DIR = ".sods"
 PROFILE_PATH = os.path.join(CACHE_DIR, "profile.json")
 
-_COOKIE_HMAC_KEY = os.environ.get("SODS_HMAC_KEY", getattr(sys, 'platform', 'unknown') + "_sods_secret").encode("utf-8")
+_COOKIE_HMAC_KEY = hashlib.sha256(
+    os.environ.get("SODS_HMAC_KEY", getattr(sys, 'platform', 'unknown') + "_sods_secret").encode("utf-8")
+).digest()
 
 # Production roadmap: replace HMAC-SHA256 with Ed25519
 # pip install cryptography
@@ -73,21 +74,40 @@ class SODSSandbox:
             
             # Incorporate PEP 669 sys.monitoring attestation comment if Python >= 3.12
             if sys.version_info >= (3, 12):
-                print(f"  [PEP 669 Hooks Active] Python {sys.version_info.major}.{sys.version_info.minor} detected. Using 'sys.monitoring' zero-overhead CALL/JUMP observation.")
-                try:
-                    import sys.monitoring as monitoring
-                    TOOL_ID = 5
-                    monitoring.use_tool_id(TOOL_ID, "sods")
-                    monitoring.set_events(TOOL_ID, monitoring.events.CALL | monitoring.events.PY_RETURN)
-                    call_count = 0
-                    def _call_handler(code, offset, callable, arg0):
-                        nonlocal call_count
-                        call_count += 1
-                        return None
-                    monitoring.register_callback(TOOL_ID, monitoring.events.CALL, _call_handler)
-                    print(f"  [PEP 669] sys.monitoring active (tool_id={TOOL_ID}), CALL events registered")
-                except (ImportError, AttributeError, ValueError) as e:
-                    print(f"  [PEP 669] unavailable: {e}")
+                print(f"  [PEP 669 Hooks Active] Python {sys.version_info.major}.{sys.version_info.minor} detected. Using 'sys.monitoring' zero-overhead CALL observation.")
+                _monitoring = None
+                _import_errors = []
+                
+                # Try multiple import methods for Python 3.13+ compatibility
+                for import_attempt in [
+                    ("import sys.monitoring", lambda: __import__('sys.monitoring')),
+                    ("from sys import monitoring", lambda: __import__('sys', fromlist=['monitoring']).monitoring),
+                ]:
+                    try:
+                        _monitoring = import_attempt[1]()
+                        break
+                    except (ImportError, AttributeError) as e:
+                        _import_errors.append(f"{import_attempt[0]}: {e}")
+                
+                if _monitoring is None:
+                    print(f"  [PEP 669] unavailable in Python {sys.version_info.major}.{sys.version_info.minor}:")
+                    for err in _import_errors:
+                        print(f"    - {err}")
+                else:
+                    try:
+                        monitoring = _monitoring
+                        TOOL_ID = 5
+                        monitoring.use_tool_id(TOOL_ID, "sods")
+                        monitoring.set_events(TOOL_ID, monitoring.events.CALL)
+                        call_count = 0
+                        def _call_handler(code, offset, callable_obj, arg0):
+                            nonlocal call_count
+                            call_count += 1
+                            return None
+                        monitoring.register_callback(TOOL_ID, monitoring.events.CALL, _call_handler)
+                        print(f"  [PEP 669] sys.monitoring active (tool_id={TOOL_ID})")
+                    except Exception as e:
+                        print(f"  [PEP 669] Hook setup failed: {e}")
 
             if is_io_side_effect:
                 print(f"  [TAINT: IMPURE] Function '{fn_name}' exhibits non-deterministic side-effects (I/O).")
