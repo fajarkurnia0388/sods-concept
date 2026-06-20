@@ -1,4 +1,4 @@
-# MENGENALI BATAS DAN JALAN TUJU EFISIENSI PERANGKAT LUNAK:
+# MENGENALI BATAS DAN JALAN MENUJU EFISIENSI PERANGKAT LUNAK:
 ## Tinjauan Kritis terhadap Gagasan "Alat Konversi Instan Universal" untuk Menjadikan Aplikasi Modern Seramping Doom (1993)
 
 > **🚀 Penulis / Atribusi Kolaborasi Riset**  
