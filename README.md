@@ -37,33 +37,33 @@ Proyek ini memodelkan filosofi kompilator JIT modern (_V8_, _PyPy_, _GraalVM_) s
 
 Proyek ini adalah murni **Educational Python PoC** dan bukan *production runtime*. Harap lihat [ROADMAP_STATUS.md](./ROADMAP_STATUS.md) untuk melihat matriks realita mengenai kapabilitas yang sudah *Implemented*, baru *Simulated*, atau sekadar rancangan (*Proposed Roadmap*).
 
-## 🌟 Potensi Raksasa Jika Tools SODS Kelak Dibangun (Why SODS Matters)
+## 🌟 Potensi Raksasa Jika Perkakas (*Tools*) SODS Kelak Dibangun (Why SODS Matters)
 
-Agar setiap tingkatan profesional memahami dampak revolusioner riset ini, kami memetakan apa yang akan terjadi jika Peta Jalan SODS kelak diwujudkan menjadi production tools nyata (misal: `sods-pack` atau `ExoRuntime`):
+Agar setiap tingkatan profesional memahami dampak revolusioner riset ini, kami memetakan apa yang akan terjadi jika Peta Jalan SODS kelak diwujudkan menjadi perkakas produksi (*production tools*) nyata (misal: `sods-pack` atau `ExoRuntime`):
 
 ### 🌱 1. Bagi Pemula (_Junior Developers / Students_): "Membuat Aplikasi Ringan Tanpa Sakit Kepala"
 
 Saat pemula belajar membangun aplikasi desktop menggunakan HTML/JS/Python, mereka sering menggunakan framework _Electron_ atau _PyQt_. Namun mereka terkejut dan berkecil hati saat melihat aplikasi kalkulator sederhana buatan mereka berukuran **150 MB** dan memakan RAM **300 MB**.
 
-- **Potensi Tool SODS:** Jika konverter otonom SODS tersedia, pemula cukup menulis kode JS/Python murni yang biasa mereka tulis. Tool SODS akan membungkus, memantau, dan menyihir aplikasi mereka di belakang layar menjadi secepat dan seringan biner C. Mereka dapat memamerkan aplikasi yang berjalan mulus di laptop lama atau ponsel murah tanpa perlu mempelajari teknik optimisasi Rust/C yang luar biasa rumit.
+- **Potensi Alat SODS:** Jika konverter otonom SODS tersedia, pemula cukup menulis kode JS/Python murni yang biasa mereka tulis. Alat SODS akan membungkus, memantau, dan menyihir aplikasi mereka di belakang layar menjadi secepat dan seringan biner C. Mereka dapat memamerkan aplikasi yang berjalan mulus di laptop lama atau ponsel murah tanpa perlu mempelajari teknik optimisasi Rust/C yang luar biasa rumit.
 
 ### ⚡ 2. Bagi Profesional Web / Mobile (_Intermediate Frontend / Mobile Devs_): "Performa Perangkat Keras Tanpa Perlu Rewrite Bahasa"
 
 Pengembang kontemporer kerap dituntut membangun komputasi berat di klien (_rendering_ data 10.000 baris, kanvas grafis, atau kriptografi lokal). Saat ini, satu-satunya cara mendapatkan performa tinggi adalah mempelajari **Rust** atau **Zig** untuk dikompilasi ke WebAssembly. Bagi banyak tim, kurva belajar Rust yang teramat curam memicu anjloknya produktivitas pengerjaan fitur (_velocity drop_).
 
-- **Potensi Tool SODS:** Pengembang cukup mempertahankan basis kode **TypeScript** atau **Python** mapan mereka. Mesin _Runtime Wrapper_ SODS akan mencegat eksekusi, menjejak _Hot Paths_, dan memancarkan instruksi Assembly/WASM murni _on-the-fly_. Tim memperoleh **kecepatan 3×–5× lipat "gratis"** tanpa mengorbankan kecepatan penyerahan fitur.
+- **Potensi Alat SODS:** Pengembang cukup mempertahankan basis kode **TypeScript** atau **Python** mapan mereka. Mesin _Runtime Wrapper_ SODS akan mencegat eksekusi, menjejak _Hot Paths_, dan memancarkan instruksi Assembly/WASM murni _on-the-fly_. Tim memperoleh **kecepatan 3×–5× lipat "gratis"** tanpa mengorbankan kecepatan penyerahan fitur.
 
 ### 🏢 3. Bagi Arsitek Cloud & Eksekutif Bisnis (_Senior Cloud/Backend Enterprise Architects_): "Memotong Tagihan Server AWS / Cloud Hingga Jutaan Dolar"
 
 Di perusahaan berskala _Enterprise / Unicorn_, peladen _backend_ monolitik (Node.js, Python, Ruby) menangani miliaran permintaan per hari. Kelemahan _overhead_ bahasa dinamis memaksa korporasi membakar uang menyewa ribuan instansi _Kubernetes pod_ atau _AWS EC2_ berkapasitas RAM gajah dan prosesor mahal.
 
-- **Potensi Tool SODS:** Diinstrumenkan di tingkat _Container Hypervisor_ (seperti _Wasmtime Fuel Pods_ atau _eBPF Mesh_), setiap mikrolayanan perusahaan akan dispesialisasi secara empiris saat peladen berjalan. Pengurangan _jejak memori_ hingga 70% dan pemotongan siklus CPU berarti peladen sanggup menelan trafik **3× lipat di atas infrastruktur hardware yang persis sama**. Korporasi menghemat anggaran tagihan peladen (_cloud billing_) hingga jutaan dolar per tahun dan menaikkan marjin laba bisnis.
+- **Potensi Alat SODS:** Diinstrumenkan di tingkat _Container Hypervisor_ (seperti _Wasmtime Fuel Pods_ atau _eBPF Mesh_), setiap mikrolayanan perusahaan akan dispesialisasi secara empiris saat peladen berjalan. Pengurangan _jejak memori_ hingga 70% dan pemotongan siklus CPU berarti peladen sanggup menelan trafik **3× lipat di atas infrastruktur perangkat keras (*hardware*) yang persis sama**. Korporasi menghemat anggaran tagihan peladen (_cloud billing_) hingga jutaan dolar per tahun dan menaikkan marjin laba bisnis.
 
 ### 🌍 4. Bagi Penggiat Green Computing & Ekosistem Makro: "Menyelamatkan Perangkat Keras Lawas dan Bumi"
 
 Jutaan laptop lama dan perangkat ponsel dibuang ke tempat sampah setiap tahun menjadi limbah elektronik (_e-waste_) semata-mata karena perangkat keras mereka tidak sanggup lagi menahan sistem operasi dan aplikasi obrolan modern yang memakan RAM berkuintal-kuintal.
 
-- **Potensi Tool SODS:** Konverter otonom SODS bertindak sebagai **Pahlawan Aksesibilitas Digital Global**. Dengan merampingkan eksekusi perangkat lunak dari luar, alat ini memperpanjang umur masa pakai hardware lama selama 5–10 tahun, menekan laju limbah _e-waste_, dan menurunkan jejak emisi karbon dari peladen pusat data di seluruh dunia.
+- **Potensi Alat SODS:** Konverter otonom SODS bertindak sebagai **Pahlawan Aksesibilitas Digital Global**. Dengan merampingkan eksekusi perangkat lunak dari luar, alat ini memperpanjang umur masa pakai perangkat keras (*hardware*) lama selama 5–10 tahun, menekan laju limbah _e-waste_, dan menurunkan jejak emisi karbon dari peladen pusat data di seluruh dunia.
 
 ---
 
@@ -71,34 +71,34 @@ Jutaan laptop lama dan perangkat ponsel dibuang ke tempat sampah setiap tahun me
 
 Repositori ini menyajikan **Desain Penelitian Hibrida (_Design Science Research_ & Studi Literatur Kualitatif)** yang dikemas ke dalam pilar modular siap pakai:
 
-### 1. 📜 [Whitepaper Teknis, Catatan Riset & Transkrip Genesis (`WHITEPAPER.md`)](./WHITEPAPER.md) (atau [Versi Bahasa Inggris](./WHITEPAPER_EN.md))
+### 1. 📜 [Karya Tulis Ilmiah (*Whitepaper*) Teknis, Catatan Riset & Transkrip Genesis (`WHITEPAPER.md`)](./WHITEPAPER.md) (atau [Versi Bahasa Inggris](./WHITEPAPER_EN.md))
 
 - **[Inspirasi Awal (`GENESIS.md`):](./GENESIS.md)** Mengabadikan transkrip esai YouTube **Di TeknoIn** (_Ketika Performance Bukan Prioritas Lagi_) yang menjadi pemantik lahirnya arsitektur ini. (atau [Versi Bahasa Inggris](./GENESIS_EN.md))
-- Naskah riset mendalam yang diformat khusus untuk ekosistem _Open-Source_ dengan strata bukti transparan (**T1 Primer Kanonik** hingga **T4 Anekdot Forum**).
-- **Audit Kesenjangan Realitas Roadmap:** Memisahkan secara tegas antara implementasi PoC Python saat ini berbanding peta jalan rekayasa kernel OS sejati.
-- **Bab 5.6 Terdepan:** Mengurai peta mitigasi 5 rintangan produksi melalui _Selective Taint Analysis (Mozilla `rr`)_, intersepsi kernel tanpa modifikasi (_eBPF_ + _DynamoRIO_), _Hardware PMU Statistical Sampling (&lt;1% overhead)_, dan _Timing Noise Randomization_.
-- **Injeksi PEP 669:** Menganalisis pemanfaatan modul Python 3.12+ `sys.monitoring` sebagai jembatan _tracing_ tingkat rendah bebas _overhead_.
+- Naskah riset mendalam yang diformat khusus untuk ekosistem sumber terbuka (*open-source*) dengan strata bukti transparan (**T1 Primer Kanonik** hingga **T4 Anekdot Forum**).
+- **Audit Kesenjangan Realitas Peta Jalan (*Roadmap*):** Memisahkan secara tegas antara implementasi PoC Python saat ini berbanding peta jalan rekayasa kernel OS sejati.
+- **Bab 5.6 Terdepan:** Mengurai peta mitigasi 5 rintangan produksi melalui analisis noda selektif (*selective taint analysis* menggunakan Mozilla `rr`), intersepsi kernel tanpa modifikasi (_eBPF_ + _DynamoRIO_), pengambilan sampel statistik PMU perangkat keras (*hardware PMU statistical sampling* dengan *overhead* <1%), dan pengacakan kebisingan waktu (*timing noise randomization*).
+- **Injeksi PEP 669:** Menganalisis pemanfaatan modul Python 3.12+ `sys.monitoring` sebagai jembatan penjejakan (*tracing*) tingkat rendah bebas *overhead*.
 
 ### 2. 💻 [Paket Perangkat Lunak Modular (`src/sods`)](./src/sods)
 
-- **Polymorphic Inline Caches (PIC: 2–3):** Menspesialisasi komputasi komparasi tanpa rapuh _monomorphic_, termasuk dukungan _mixed numerics_ (`int + float`).
-- **WASI I/O Boundary:** Mencegat fungsi dengan efek samping I/O via _Taint Analysis_.
-- **Thread-Safety Locked:** Dilindungi pengunci `threading.Lock()` yang menanggulangi _race conditions_ pada beban kerja _multithreaded_ atau _asyncio_.
-- **Tier-Lowering Protection:** Memantau badai masukan acak (_highly volatile megamorphic sites_). Bila rasio kegagalan Guard melampaui **30%**, sistem membakar spesialisasi secara permanen dan mengunci jalur ke mode aman.
-- **Audit Kinerja Ilmiah:** Mengeliminasi _overhead dispatch_ dinamis Python menghasilkan peningkatan kecepatan throughput **3.1× hingga 3.25× lebih cepat vs target generik** (terukur konsisten di Python 3.10–3.13, Linux x86_64). Terhadap `operator.add` native C-level, SODS masih 4.3× lebih lambat — trade-off yang jujur dari PoC Python wrapper.
+- **Polymorphic Inline Caches (PIC: 2–3):** Menspesialisasi komputasi komparasi tanpa kerentanan tipe tunggal (*monomorphic*), termasuk dukungan numerik campuran (*mixed numerics* seperti `int + float`).
+- **Batas WASI I/O (*WASI I/O Boundary*):** Mencegat fungsi dengan efek samping I/O melalui analisis noda (*taint analysis*).
+- **Keamanan Ulir Terkunci (*Thread-Safety Locked*):** Dilindungi pengunci `threading.Lock()` yang menanggulangi kondisi balapan (*race conditions*) pada beban kerja multi-ulir (*multithreaded*) atau `asyncio`.
+- **Perlindungan Penurunan Tingkat (*Tier-Lowering Protection*):** Memantau badai masukan acak pada lokasi megamorfik yang sangat tidak stabil (*highly volatile megamorphic sites*). Bila rasio kegagalan *guard* melampaui **30%**, sistem membakar spesialisasi secara permanen dan mengunci jalur ke mode aman.
+- **Audit Kinerja Ilmiah:** Mengeliminasi *overhead* pengiriman (*dispatch*) dinamis Python menghasilkan peningkatan kecepatan laju keluaran (*throughput*) **3.1× hingga 3.25× lebih cepat vs target generik** (terukur konsisten di Python 3.10–3.13, Linux x86_64). Terhadap `operator.add` tingkat C bawaan (*native C-level*), SODS masih 4.3× lebih lambat — pertukaran timbal-balik (*trade-off*) yang jujur dari *wrapper* PoC Python.
 
 ### 3. ⚖️ [Pengujian & Benchmark Ilmiah (`benchmarks/` & `tests/`)](./benchmarks)
 
-- `benchmarks/bench_add.py` mengeksekusi komparasi 2 skenario (Workload Stabil vs Workload Volatile) berbanding eksekusi murni tingkat C bawaan Python (`operator.add`).
-- `tests/test_sods.py` memverifikasi 100% invarian JIT secara otomatis penuh.
+- `benchmarks/bench_add.py` mengeksekusi komparasi 2 skenario (Beban Kerja [*Workload*] Stabil vs Beban Kerja Volatile) berbanding eksekusi murni tingkat C bawaan Python (`operator.add`).
+- `tests/test_sods.py` memverifikasi 100% invarian *compiler* JIT secara otomatis penuh.
 
 ### 4. 🌐 [Pratinjau Visual Arsitektur Sistem (`index.html`)](https://fajarkurnia0388.github.io/sods-runtime/)
 
-- Visualisasi grafis interaktif berdesain _Dark-Mode 2026 Premium_ (`SF Mono` / struktur kartu berlapis).
-- Mengilustrasikan aliran 5 Tahap _Pipeline_ secara lengkap (dari _Cold Run_ hingga _Warm Run_).
+- Visualisasi grafis interaktif berdesain mode gelap (*dark mode*) 2026 Premium (`SF Mono` / struktur kartu berlapis).
+- Mengilustrasikan aliran 5 Tahap *pipeline* secara lengkap (dari eksekusi awal [*cold run*] hingga eksekusi hangat [*warm run*]).
 
 ### 🍪 5. Contoh State Cookie (profile.json)
-Berikut adalah cuplikan metrik telemetri yang disimpan SODS paska _Cold Run_, dilindungi HMAC-SHA256:
+Berikut adalah cuplikan metrik telemetri yang disimpan SODS pasca *cold run*, dilindungi HMAC-SHA256:
 ```json
 {
   "payload": {
@@ -122,19 +122,19 @@ Berikut adalah cuplikan metrik telemetri yang disimpan SODS paska _Cold Run_, di
 
 ---
 
-## 🚀 Cara Menjalankan CLI Tools & Prototipe
+## 🚀 Cara Menjalankan Perkakas CLI (*CLI Tools*) & Prototipe
 
 Anda dapat mengeksekusi dan mengaudit prototipe menggunakan titik masuk CLI yang elegan:
 
 ```bash
-# Clone repositori
+# Kloning repositori
 git clone https://github.com/fajarkurnia0388/sods-runtime.git
 cd sods-runtime
 
-# Install paket secara editable
+# Pasang paket dalam mode yang dapat diedit (editable mode)
 pip install -e .
 
-# ── 1. Eksplorasi CLI Tools ──────────────────────────────────────────────
+# ── 1. Eksplorasi Perkakas CLI (CLI Tools) ───────────────────────────────
 sods observe --target generic_add --workload-size 1000
 sods specialize --target generic_add --workload-size 25000
 sods verify --target generic_add
@@ -142,10 +142,10 @@ sods verify --target generic_add
 # ── 2. Eksekusi Skrip Edukatif Terminal ─────────────────────────────────────
 python3 prototype_sods.py
 
-# ── 3. Eksekusi Scientific Benchmark berbanding operator C native Python ──
+# ── 3. Eksekusi Uji Tolok Ukur Ilmiah (Scientific Benchmark) vs Operator C Bawaan Python ──
 PYTHONPATH=src python3 benchmarks/bench_add.py
 
-# ── 4. Jalankan Automated Test Suite ────────────────────────────────────────
+# ── 4. Jalankan Rangkaian Pengujian Otomatis (Automated Test Suite) ─────────
 PYTHONPATH=src python3 -m unittest discover tests
 ```
 
@@ -157,14 +157,14 @@ Guna menjaga objektivitas ilmiah yang ketat, kami membagi kapabilitas proyek ke 
 
 | Kapabilitas / Rintangan             | Status Aktual di Repo                     | Pemilihan Teknologi Target Produksi        |
 | ----------------------------------- | ----------------------------------------- | ------------------------------------------ |
-| **Polymorphic Inline Caches (PIC)** | **Implemented** (Python PoC wrapper)      | Register-level `cmp` + `jne` Machine Code  |
-| **On-Stack Replacement (OSR)**      | **Implemented** (Python Stack Evacuation) | Native Stack Frame Reconstruction          |
-| **Tier-Lowering Protection**        | **Implemented** (Persistent Locked Set)   | Polymorphic Call Site Tier-Lowering        |
-| **WASI Side-Effect Boundary**       | **Simulated** (Manual Taint Flag)         | `Seccomp` / WASI POSIX Interception        |
-| **Sandbox Evasion Mitigation**      | **Simulated** (Virtual Timing Noise)      | KVM/VMware High-Res Clock Randomization    |
-| **Closed-Binary Observability**     | **Proposed** (Roadmap Phase 2)            | Intersepsi Kernel **eBPF** + **DynamoRIO** |
-| **Zero-Overhead Profiling**         | **Proposed** (Roadmap Phase 1)            | **Hardware PMU Statistical Sampling**      |
-| **Tauri Drop-In Companion Runtime** | **Future Work** (Roadmap Phase 4)         | Modul Eksperimental Companion Tauri        |
+| **Polymorphic Inline Caches (PIC)** | **Terimplementasi (*Implemented*)** (Python PoC *wrapper*)      | Kode Mesin `cmp` + `jne` Tingkat Register  |
+| **On-Stack Replacement (OSR)**      | **Terimplementasi (*Implemented*)** (Python Stack Evacuation) | Rekonstruksi Bingkai Tumpukan (*Stack Frame*) Asli          |
+| **Tier-Lowering Protection**        | **Terimplementasi (*Implemented*)** (Persistent Locked Set)   | Penurunan Tingkat Lokasi Pemanggilan Polimorfik (*Polymorphic Call Site*)        |
+| **WASI Side-Effect Boundary**       | **Disimulasikan (*Simulated*)** (Manual Taint Flag)         | Intersepsi `Seccomp` / WASI POSIX Interception        |
+| **Sandbox Evasion Mitigation**      | **Disimulasikan (*Simulated*)** (Timing Noise Virtual)      | Pengacakan Jam Resolusi Tinggi KVM/VMware    |
+| **Closed-Binary Observability**     | **Diusulkan (*Proposed*)** (Peta Jalan [*Roadmap*] Fase 2)            | Intersepsi Kernel **eBPF** + **DynamoRIO** |
+| **Zero-Overhead Profiling**         | **Diusulkan (*Proposed*)** (Peta Jalan [*Roadmap*] Fase 1)            | Pengambilan Sampel Statistik PMU Perangkat Keras (*Hardware PMU*)      |
+| **Tauri Drop-In Companion Runtime** | **Pekerjaan Masa Depan (*Future Work*)** (Peta Jalan [*Roadmap*] Fase 4)         | Modul Eksperimental Pendamping (*Companion*) Tauri        |
 
 ---
 

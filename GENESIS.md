@@ -21,11 +21,11 @@ Di era 1970-an hingga awal 1990-an, pengembang perangkat lunak tidak memiliki ja
 
 Para programmer di masa itu menulis instruksi murni menggunakan bahasa _Assembly_ atau C tingkat rendah. Tidak ada _framework_ pembantu atau abstraksi mewah. Pengembang tahu secara pasti apa yang berdetak di dalam setiap siklus prosesor (_CPU cycle_). Hasilnya terbukti spektakuler: mahakarya John Carmack, _Doom_ (1993), sanggup menghadirkan pesona 3D interaktif di atas **RAM 4 MB** memanfaatkan inovasi algoritma _Binary Space Partitioning_ (BSP).
 
-Namun, teladan arsitektur yang paling membumi adalah sebuah tool yang hampir semua pengguna Windows pernah sentuh: **Task Manager**.
+Namun, teladan arsitektur yang paling membumi adalah sebuah alat yang hampir semua pengguna Windows pernah sentuh: **Task Manager**.
 Pada pertengahan 1990-an, Dave Plummer (seorang insinyur veteran Microsoft) membangun Windows Task Manager di waktu luangnya. Karena tugas utama aplikasi ini adalah menolong sistem operasi yang sedang mengalami kelumpuhan (_crash_), Task Manager diharamkan untuk ikut-ikutan _crash_. Plummer menulis kodenya secara ketat dalam bahasa C, menekan konsumsi memori murni hingga menyusut ke **80 KB RAM**, memastikan aplikasi kelak selalu sanggup dipanggil bahkan saat memori OS telah terfragmentasi parah.
 
 Lebih mengagumkan lagi adalah cara Plummer memecahkan persoalan konkurensi: _bagaimana memastikan Task Manager tidak terbuka dua instansi sekaligus saat pengguna panik menekan tombol berkali-kali?_
-Solusinya teramat anggun. Saat Task Manager diluncurkan, ia menanamkan sebuah **penanda unik (_memory marker mutex_)** di dalam RAM. Apabila penanda tersebut telah terdeteksi, berarti instansi Task Manager lain sudah berjalan. Bukannya memuat jendela baru yang membebani OS, ia cukup menyuruh jendela yang sudah ada untuk melompat ke depan (_bring to front_), lalu instansi kedua tersebut langsung bunuh diri secara membanggakan. _Di masa lalu, setiap keputusan desain berpusat pada empati terhadap keterbatasan hardware._
+Solusinya teramat anggun. Saat Task Manager diluncurkan, ia menanamkan sebuah **penanda unik (_memory marker mutex_)** di dalam RAM. Apabila penanda tersebut telah terdeteksi, berarti instansi Task Manager lain sudah berjalan. Bukannya memuat jendela baru yang membebani OS, ia cukup menyuruh jendela yang sudah ada untuk melompat ke depan (_bring to front_), lalu instansi kedua tersebut langsung bunuh diri secara membanggakan. _Di masa lalu, setiap keputusan desain berpusat pada empati terhadap keterbatasan perangkat keras (_hardware_)._
 
 ---
 
@@ -35,12 +35,12 @@ Ketika Hukum Moore perlahan menurunkan harga SSD dan silikon hingga melimpah dan
 
 Di sinilah **Penyakit Ekosistem Modern** mulai tumbuh subur:
 
-1. **Hukum Wirth (_Wirth's Law_):** _Perangkat lunak melambat jauh lebih cepat daripada peningkatan kecepatan hardware_. Sebagian besar keuntungan yang diberikan oleh prosesor tercepat hari ini habis terbakar semata-mata untuk menutupi tumpukan _overhead_ dari kerangka kerja tingkat tinggi.
+1. **Hukum Wirth (_Wirth's Law_):** _Perangkat lunak melambat jauh lebih cepat daripada peningkatan kecepatan perangkat keras (_hardware_)_. Sebagian besar keuntungan yang diberikan oleh prosesor tercepat hari ini habis terbakar semata-mata untuk menutupi tumpukan _overhead_ dari kerangka kerja tingkat tinggi.
 2. **Kutukan Framework Electron:** Idenya terdengar luar biasa mulia—_"Tulis kode web (HTML/CSS/JS) sekali, lalu jalankan sebagai aplikasi desktop di semua OS"_. Namun implementasinya luar biasa brutal. Framework Electron menempelkan satu salinan utuh peramban Chromium dan _engine runtime_ Node.js di dalam setiap aplikasi. Akibatnya, saat Anda membuka VS Code, Slack, Spotify, dan Discord serentak, laptop Anda terpaksa memuat empat peladen Chromium terpisah ke dalam RAM.
-3. **Paradoks Jevons (_Jevons Paradox_):** _Ketika sumber daya hardware menjadi lebih murah dan efisien, manusia tidak menggunakannya lebih sedikit, melainkan meledak menggunakannya lebih boros_. Storage murah memicu penumpukan log tak terkelola; _bandwidth_ cepat membuat peramban menyedot puluhan iklan, pelacak (_trackers_), dan _video autoplay_ di latar belakang sebelum baris pertama artikel muncul di layar.
+3. **Paradoks Jevons (_Jevons Paradox_):** _Ketika sumber daya perangkat keras (*hardware*) menjadi lebih murah dan efisien, manusia tidak menggunakannya lebih sedikit, melainkan meledak menggunakannya lebih boros_. Storage murah memicu penumpukan log tak terkelola; _bandwidth_ cepat membuat peramban menyedot puluhan iklan, pelacak (_trackers_), dan _video autoplay_ di latar belakang sebelum baris pertama artikel muncul di layar.
 
 **Mengapa korporasi raksasa tidak mau memperbaikinya?** Jawabannya adalah realitas bisnis yang murni dan dingin: **Karena tidak menguntungkan**.
-Mempekerjakan satu _Senior Systems Engineer_ selama berbulan-bulan hanya untuk memangkas _overhead_ 300 MB RAM akan membakar anggaran ratusan juta rupiah per bulan. Bagi korporasi, jauh lebih murah membiarkan aplikasi mereka bengkak, merilis fitur baru secepat mungkin ke pasar, dan memaksa pengguna yang menanggung bebannya dengan cara meng- _upgrade_ RAM spesifikasi laptop mereka. _Fokus industri telah berganti dari keanggunan komputasi menjadi kecepatan bisnis._
+Mempekerjakan satu _Senior Systems Engineer_ selama berbulan-bulan hanya untuk memangkas _overhead_ 300 MB RAM akan membakar anggaran ratusan juta rupiah per bulan. Bagi korporasi, jauh lebih murah membiarkan aplikasi mereka bengkak, merilis fitur baru secepat mungkin ke pasar, dan memaksa pengguna yang menanggung bebannya dengan cara meng- _upgrade_ RAM spesifikasi laptop mereka. _Fokus industri telah berganti dari keanggunan komputasi menjadi kecepatan bisnis (dan memaksa pengguna mengupgrade perangkat keras mereka)._
 
 ---
 
@@ -67,14 +67,14 @@ Fajar mengambil satu lompatan deduktif yang brilian, memadukan ilmu kompilator d
 "Jaga kebenaran 100% via pengawalan Guards dan evakuasi OSR (Deoptimization)."
 ```
 
-Melalui SODS, Fajar memodelkan sebuah tool perantara yang **mendistribusikan keanggunan JIT Compiler murni kepada aplikasi-aplikasi yang tidak memilikinya**. Kita tidak perlu merubah cara pengembang menulis kode; mesin _Hypervisor OS_ kitalah yang akan menyihir komputasi mereka di perbatasan eksekusi (_Runtime Specialization_).
+Melalui SODS, Fajar memodelkan sebuah alat perantara yang **mendistribusikan keanggunan kompilator JIT (*JIT compiler*) murni kepada aplikasi-aplikasi yang tidak memilikinya**. Kita tidak perlu merubah cara pengembang menulis kode; mesin _Hypervisor OS_ kitalah yang akan menyihir komputasi mereka di perbatasan eksekusi (_Runtime Specialization_).
 
 ---
 
 ## 🌟 Penutup: Manifesto Pencerahan Perangkat Keras
 
-Game _Sifu_ (2022) sanggup menghadirkan dunia aksi 3D yang begitu menakjubkan hanya di dalam ukuran **1.2 GB**, berjalan lancar di hardware berusia 10 tahun. Sementara game AAA lain menuntut _storage_ 150 GB and masih sering mengalami _stuttering_.
+Game _Sifu_ (2022) sanggup menghadirkan dunia aksi 3D yang begitu menakjubkan hanya di dalam ukuran **1.2 GB**, berjalan lancar di perangkat keras (*hardware*) berusia 10 tahun. Sementara game AAA lain menuntut _storage_ 150 GB and masih sering mengalami _stuttering_.
 
-Hal ini membuktikan satu kebenaran mutlak: **Efisiensi bukanlah keahlian yang hilang dari dunia rekayasa komputasi, melainkan insentifnya yang telah terlupakan**. Melalui arsitektur SODS, kita mengembalikan insentif keanggunan tersebut, membuktikan bahwa perangkat lunak modern tetap sanggup berjalan seramping dan sekencang perangkat keras mentah era Apollo 11.
+Hal ini membuktikan satu kebenaran mutlak: **Efisiensi bukanlah keahlian yang hilang dari dunia rekayasa komputasi, melainkan insentifnya yang telah terlupakan**. Melalui arsitektur SODS, kita mengenangkan kembali insentif keanggunan tersebut, membuktikan bahwa perangkat lunak modern tetap sanggup berjalan seramping dan sekencang perangkat keras mentah era Apollo 11.
 
 Terima kasih, **Di TeknoIn**, atas karya yang telah menggetarkan nalar dan memicu berdirinya rancang bangun mahakarya riset ini!
